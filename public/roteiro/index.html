@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0D12">
+<title>Roteiro de palco</title>
+<style>
+  :root{
+    --fundo:#0B0D12; --carta:#151922; --linha:#262D3A;
+    --texto:#ECEBE6; --apoio:#A6ADBE; --acc:#8FA4FF; --sig:#FF8A72; --ok:#7FD1A0;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--fundo);color:var(--texto);
+    font-family:"Archivo",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.45;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.66rem;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--apoio)}
+
+  /* ---------- topo fixo ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:5;background:rgba(11,13,18,.96);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--linha);
+    padding:max(10px,env(safe-area-inset-top)) 14px 9px}
+  .topo{display:flex;align-items:center;gap:10px}
+  .tempo{font-family:ui-monospace,Menlo,monospace;font-weight:700;font-size:1.05rem;color:var(--acc);
+    font-variant-numeric:tabular-nums}
+  .quem{font-weight:700;font-size:.92rem;flex:1}
+  .quem.outro{color:var(--sig)}
+  .posicao{font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:var(--apoio)}
+  .btn-indice{font:inherit;font-size:.72rem;font-weight:600;padding:6px 10px;border:1px solid var(--linha);
+    background:transparent;color:var(--apoio);cursor:pointer;border-radius:6px}
+  .barra{height:3px;background:var(--linha);margin-top:9px;border-radius:2px;overflow:hidden}
+  .barra i{display:block;height:100%;background:var(--acc);transition:width .25s}
+
+  /* ---------- carta ---------- */
+  main{padding:104px 14px max(120px,calc(96px + env(safe-area-inset-bottom)))}
+  .carta{background:var(--carta);border:1px solid var(--linha);border-radius:14px;padding:18px 16px}
+  .carta.pico{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc) inset}
+  .carta.escura{background:#05060A;border-color:#333B4D}
+
+  .natela{border-left:3px solid var(--apoio);padding-left:12px;margin-bottom:16px}
+  .natela .mono{display:block;margin-bottom:5px}
+  .natela p{font-weight:600;font-size:1.08rem;line-height:1.25;color:var(--texto)}
+  .natela p + p{margin-top:4px;opacity:.75;font-size:.98rem}
+  .natela .etq{color:var(--acc);font-weight:700;font-size:.8rem;letter-spacing:.06em;
+    text-transform:uppercase;margin-bottom:4px}
+
+  .nota{font-size:1.16rem;line-height:1.5}
+  .nota b{color:#fff}
+  /* frases entre aspas viram fala, destacadas */
+  .nota .fala{color:#fff;font-weight:600}
+  .nota .aviso{color:var(--sig);font-weight:700}
+  .nota .pausa{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.72em;
+    letter-spacing:.08em;text-transform:uppercase;background:#3A2018;color:var(--sig);
+    padding:1px 6px;border-radius:4px;vertical-align:1px;font-weight:700}
+
+  .app{margin-top:16px;padding-top:12px;border-top:1px solid var(--linha);
+    font-family:ui-monospace,Menlo,monospace;font-size:.76rem;line-height:1.5;color:var(--acc)}
+  .passos{margin-top:10px;font-size:.8rem;color:var(--apoio)}
+  .passos b{color:var(--ok)}
+  .aseguir{margin-top:14px;padding-top:11px;border-top:1px solid var(--linha);
+    font-size:.84rem;color:var(--apoio);line-height:1.4}
+  .aseguir .mono{display:block;margin-bottom:3px}
+  .aseguir .troca{color:var(--sig);font-weight:700}
+
+  /* ---------- rodapé de navegação ---------- */
+  footer{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;gap:10px;
+    padding:10px 14px max(12px,env(safe-area-inset-bottom));
+    background:rgba(11,13,18,.96);backdrop-filter:blur(8px);border-top:1px solid var(--linha)}
+  footer button{flex:1;font:inherit;font-weight:700;font-size:1rem;padding:16px 10px;border-radius:10px;
+    border:1px solid var(--linha);background:var(--carta);color:var(--texto);cursor:pointer}
+  footer button.frente{flex:2;background:var(--acc);border-color:var(--acc);color:#0B0D12}
+  footer button:active{transform:translateY(1px)}
+
+  /* ---------- índice ---------- */
+  #indice{position:fixed;inset:0;z-index:9;background:var(--fundo);overflow:auto;
+    padding:max(14px,env(safe-area-inset-top)) 14px max(20px,env(safe-area-inset-bottom))}
+  #indice[hidden]{display:none}
+  #indice h2{font-size:1.1rem;margin-bottom:12px}
+  .item{display:grid;grid-template-columns:3.2rem 2.6rem 1fr;gap:10px;align-items:baseline;
+    padding:11px 8px;border-bottom:1px solid var(--linha);cursor:pointer;font-size:.9rem}
+  .item:active{background:var(--carta)}
+  .item .n{font-family:ui-monospace,Menlo,monospace;color:var(--apoio);font-size:.75rem}
+  .item .h{font-family:ui-monospace,Menlo,monospace;color:var(--acc);font-size:.75rem}
+  .item.atual{background:var(--carta)}
+  .item.outro .t{color:var(--sig)}
+  .fechar{position:sticky;top:0;width:100%;padding:14px;margin-bottom:8px;font:inherit;font-weight:700;
+    background:var(--carta);color:var(--texto);border:1px solid var(--linha);border-radius:10px;cursor:pointer}
+
+  .luz{position:fixed;right:14px;bottom:86px;z-index:4;font-family:ui-monospace,Menlo,monospace;
+    font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--apoio);opacity:.5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topo">
+    <span class="tempo" id="tempo">00:00</span>
+    <span class="quem" id="quem">Luis</span>
+    <span class="posicao" id="posicao">1/37</span>
+    <button type="button" class="btn-indice" id="abrir">índice</button>
+  </div>
+  <div class="barra"><i id="progresso"></i></div>
+</header>
+
+<main id="palco">
+  <article class="carta" id="carta"></article>
+</main>
+
+<span class="luz" id="luz"></span>
+
+<footer>
+  <button type="button" id="voltar">←</button>
+  <button type="button" class="frente" id="avancar">próxima tela →</button>
+</footer>
+
+<div id="indice" hidden>
+  <button type="button" class="fechar" id="fechar">fechar índice</button>
+  <h2>Todas as telas</h2>
+  <div id="lista"></div>
+</div>
+
+<script src="/roteiro/telas.js"></script>
+<script>
+(function(){
+  var telas = window.TELAS || []
+  var i = 0
+  var $ = function(id){ return document.getElementById(id) }
+
+  /**
+   * A nota vem da apresentação em texto corrido. Aqui ela ganha forma para ser
+   * lida de relance, no meio de uma fala: o que está entre aspas é fala, o que
+   * está em MAIÚSCULA é aviso, e [3s] vira etiqueta de pausa.
+   */
+  function marcar(nota){
+    var s = nota.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+
+    // As marcações entram como símbolos sem aspas e só viram HTML no fim. Se
+    // as tags fossem inseridas direto, a segunda regra casaria com as aspas
+    // que a primeira acabou de escrever, e o texto saía embaralhado.
+    s = s.replace(/\[([^\]]{1,24})\]/g, '\u0001$1\u0002')
+    s = s.replace(/'([^']{3,}?)'/g, '\u0003$1\u0004')
+    s = s.replace(/"([^"]{3,}?)"/g, '\u0003$1\u0004')
+    s = s.replace(/\b([A-ZÀ-Ý][A-ZÀ-Ý\s,\-]{4,}[A-ZÀ-Ý])\b/g, '\u0005$1\u0006')
+
+    return s
+      .replace(/\u0001/g, '<span class="pausa">').replace(/\u0002/g, '</span>')
+      .replace(/\u0003/g, '<span class="fala">“').replace(/\u0004/g, '”</span>')
+      .replace(/\u0005/g, '<span class="aviso">').replace(/\u0006/g, '</span>')
+  }
+
+  function pinta(){
+    var t = telas[i]
+    if (!t) return
+    $('tempo').textContent = t.t || '—'
+    $('quem').textContent = t.quem || ''
+    $('quem').className = 'quem' + (t.quem && t.quem !== 'Luis' ? ' outro' : '')
+    $('posicao').textContent = (i+1) + '/' + telas.length
+    $('progresso').style.width = ((i+1)/telas.length*100) + '%'
+
+    var natela = ''
+    if (t.etiqueta || (t.tela && t.tela.length)) {
+      natela = '<div class="natela">' +
+        '<span class="mono">no telão</span>' +
+        (t.etiqueta ? '<p class="etq">' + t.etiqueta + '</p>' : '') +
+        (t.tela || []).map(function(f){ return '<p>' + f + '</p>' }).join('') +
+        '</div>'
+    }
+
+    var passos = t.passos > 1
+      ? '<p class="passos">Esta tela tem <b>' + t.passos + ' avanços</b> — o texto entra por partes.</p>'
+      : ''
+
+    var carta = $('carta')
+    carta.className = 'carta' + (t.pico ? ' pico' : '') + (t.escura ? ' escura' : '')
+    // saber o que vem a seguir é o que permite emendar sem olhar de novo
+    var prox = telas[i+1]
+    var aseguir = prox
+      ? '<p class="aseguir"><span class="mono">a seguir</span>' +
+        (prox.quem && prox.quem !== t.quem ? '<b class="troca">passa para ' + prox.quem + '</b> · ' : '') +
+        (prox.etiqueta || (prox.tela && prox.tela[0]) || '').slice(0, 70) + '</p>'
+      : '<p class="aseguir"><span class="mono">fim</span>última tela — deixe no ar enquanto eles saem</p>'
+
+    carta.innerHTML = natela + '<div class="nota">' + marcar(t.nota) + '</div>' + passos + aseguir
+    window.scrollTo(0, 0)
+    try { localStorage.setItem('eusei:roteiro', String(i)) } catch(e){}
+  }
+
+  function vai(n){ i = Math.max(0, Math.min(telas.length - 1, n)); pinta() }
+
+  $('avancar').addEventListener('click', function(){ vai(i+1) })
+  $('voltar').addEventListener('click', function(){ vai(i-1) })
+
+  // deslize para os lados, como no telão
+  var x = null
+  document.addEventListener('touchstart', function(e){ x = e.changedTouches[0].clientX }, {passive:true})
+  document.addEventListener('touchend', function(e){
+    if (x === null) return
+    var d = e.changedTouches[0].clientX - x; x = null
+    if (Math.abs(d) > 60) vai(d < 0 ? i+1 : i-1)
+  }, {passive:true})
+
+  // teclado, para ensaiar no computador
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { vai(i+1); e.preventDefault() }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { vai(i-1); e.preventDefault() }
+    else if (e.key === 'Escape') { $('indice').hidden = true }
+  })
+
+  // índice
+  $('lista').innerHTML = telas.map(function(t, n){
+    var resumo = t.etiqueta || (t.tela && t.tela[0]) || t.nota.slice(0, 48)
+    return '<div class="item' + (t.quem !== 'Luis' ? ' outro' : '') + '" data-i="' + n + '">' +
+      '<span class="h">' + (t.t || '') + '</span>' +
+      '<span class="n">' + (n+1) + '</span>' +
+      '<span class="t">' + (t.quem ? '<b>' + t.quem + '</b> · ' : '') + resumo + '</span>' +
+      '</div>'
+  }).join('')
+  $('lista').addEventListener('click', function(e){
+    var alvo = e.target.closest('.item'); if (!alvo) return
+    vai(Number(alvo.dataset.i)); $('indice').hidden = true
+  })
+  $('abrir').addEventListener('click', function(){
+    $('indice').hidden = false
+    var atual = $('lista').children[i]
+    ;[].forEach.call($('lista').children, function(el){ el.classList.remove('atual') })
+    if (atual) { atual.classList.add('atual'); atual.scrollIntoView({block:'center'}) }
+  })
+  $('fechar').addEventListener('click', function(){ $('indice').hidden = true })
+
+  /**
+   * Manter a tela acesa. Um celular que apaga no meio da fala é o jeito mais
+   * bobo de perder o fio — e reacender com a sala olhando custa cinco segundos.
+   */
+  var trava = null
+  function acende(){
+    if (!('wakeLock' in navigator)) { $('luz').textContent = 'deixe a tela sempre acesa nos ajustes'; return }
+    navigator.wakeLock.request('screen').then(function(t){
+      trava = t
+      $('luz').textContent = 'tela travada acesa'
+      t.addEventListener('release', function(){ $('luz').textContent = '' })
+    }).catch(function(){ $('luz').textContent = 'toque na tela para mantê-la acesa' })
+  }
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible' && !trava) acende()
+  })
+  // o navegador só concede a trava depois de um toque
+  document.addEventListener('click', function liga(){ acende(); document.removeEventListener('click', liga) })
+
+  // retoma de onde parou, se recarregar no meio
+  try {
+    var salvo = Number(localStorage.getItem('eusei:roteiro'))
+    if (salvo > 0 && salvo < telas.length) i = salvo
+  } catch(e){}
+  pinta()
+})()
+</script>
+</body>
+</html>
