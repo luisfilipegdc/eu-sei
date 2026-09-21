@@ -1,0 +1,308 @@
+/* ---------- palco ---------- */
+
+.deck {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: stretch;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: default;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--in), color var(--in);
+}
+
+.deck--dark {
+  background: var(--black);
+  color: var(--onblack);
+}
+
+.slide {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8vmin 9vmin;
+  height: 100%;
+  width: 100%;
+  gap: 3vmin;
+}
+
+.slide--center {
+  align-items: center;
+  text-align: center;
+}
+
+/* as duas únicas animações: aparecer e esmaecer */
+.appear {
+  animation: appear var(--in) both;
+}
+
+.fade-out {
+  /* !important porque a animação `appear` tem fill-mode both e fixaria opacity:1 */
+  opacity: 0.22 !important;
+  transition: opacity var(--in);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(0.8vmin);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appear {
+    animation: none;
+  }
+}
+
+/* ---------- tipos de texto ---------- */
+
+.mega {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--t-mega);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.xl {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--t-xl);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.line {
+  font-family: var(--font-text);
+  font-weight: 500;
+  font-size: var(--t-lg);
+  line-height: 1.15;
+  margin: 0;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mut);
+  margin: 0;
+}
+
+/* ---------- eusei ---------- */
+
+.eusei {
+  font-size: clamp(3rem, 22vmin, 20rem);
+}
+
+/* ---------- axis ---------- */
+
+.axis {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4vmin;
+}
+
+.axis__pole {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--t-xl);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.axis__pole--a {
+  color: var(--acc);
+}
+
+.axis__pole--b {
+  color: var(--sig);
+}
+
+.axis__rule {
+  flex: 1;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.35;
+}
+
+.axis__caption {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--mut);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- illusion ---------- */
+
+.illusion {
+  width: min(86vw, 150vmin);
+  height: 34vmin;
+  position: relative;
+  background: linear-gradient(90deg, #1C1E24 0%, #E7E6E2 100%);
+  display: flex;
+  align-items: center;
+}
+
+.illusion__square {
+  position: absolute;
+  width: 16vmin;
+  height: 16vmin;
+  background: #8A8A8A;
+  transition: left var(--in) linear;
+  will-change: left;
+}
+
+/* ---------- lista escura (tela 14) ---------- */
+
+.dark-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4vmin;
+  width: 100%;
+  max-width: 46ch;
+}
+
+.dark-list__item {
+  font-family: var(--font-text);
+  font-weight: 500;
+  font-size: var(--t-md);
+  line-height: 1.2;
+  display: flex;
+  gap: 1.6vmin;
+  align-items: baseline;
+}
+
+.dark-list__n {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--mut);
+}
+
+/* ---------- cromo do telão ---------- */
+
+.progress {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--acc);
+  transition: width var(--in);
+  z-index: 40;
+}
+
+.deck--dark .progress {
+  background: var(--onblack);
+  opacity: 0.55;
+}
+
+.chrome {
+  position: fixed;
+  z-index: 40;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--mut);
+  pointer-events: none;
+}
+
+.chrome--counter {
+  right: 2.2vmin;
+  bottom: 1.8vmin;
+}
+
+.chrome--timer {
+  left: 2.2vmin;
+  bottom: 1.8vmin;
+  font-variant-numeric: tabular-nums;
+}
+
+.chrome--timer.is-over {
+  color: var(--sig);
+}
+
+.deck--dark .chrome {
+  color: #55596A;
+}
+
+/* ---------- overlays (notas, fontes, ajuda) ---------- */
+
+.overlay {
+  position: fixed;
+  z-index: 50;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-text);
+  line-height: 1.45;
+}
+
+.overlay--notes {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.4vmin 3vmin;
+  font-size: clamp(0.9rem, 2.1vmin, 1.4rem);
+  max-height: 42vh;
+  overflow: auto;
+  border-top: 2px solid var(--acc);
+}
+
+.overlay--sources {
+  inset: 0;
+  padding: 8vmin 9vmin;
+  overflow: auto;
+}
+
+.overlay__title {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mut);
+  margin: 0 0 1.6vmin;
+}
+
+.sources__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2vmin;
+  max-width: 60ch;
+  font-size: clamp(0.9rem, 2.2vmin, 1.4rem);
+}
+
+.sources__list kbd {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--acc);
+  margin-right: 0.8em;
+}
+
+.help {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--mut);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4vmin 2.4vmin;
+  margin-top: 3vmin;
+}

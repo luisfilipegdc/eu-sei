@@ -1,0 +1,45 @@
+:root {
+  --paper: #EFEEEA;
+  --ink: #101319;
+  --acc: #2B4FE8;
+  --sig: #C8341F;
+  --mut: #7C8192;
+  --black: #08090C;
+  --onblack: #F1F0EC;
+
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-text: 'Archivo', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* escala tipográfica em vmin: a mesma tela roda em 4:3, widescreen e celular */
+  --t-mega: clamp(2.5rem, 13vmin, 11rem);
+  --t-xl: clamp(2rem, 8.5vmin, 7rem);
+  --t-lg: clamp(1.5rem, 5.5vmin, 4rem);
+  --t-md: clamp(1.1rem, 3.4vmin, 2.2rem);
+  --t-sm: clamp(0.8rem, 1.8vmin, 1.1rem);
+
+  /* as duas únicas animações do projeto */
+  --in: 320ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
