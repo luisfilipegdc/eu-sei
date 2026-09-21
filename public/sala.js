@@ -69,6 +69,13 @@ window.SALA = (function () {
     var timer = null
     function ciclo() {
       if (!vivo) return
+      // sem rede, nem tenta: o critério do §7 é rodar do começo ao fim com o
+      // wi-fi desligado e sem erro no console, e cada fetch morto vira um erro
+      if (navigator.onLine === false) {
+        cb(null)
+        timer = setTimeout(ciclo, ms || 2000)
+        return
+      }
       ler(tipo).then(function (linhas) {
         if (!vivo) return
         cb(linhas)

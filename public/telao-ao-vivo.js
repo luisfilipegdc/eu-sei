@@ -195,9 +195,14 @@
     return
   }
 
-  var falhas = 0
-  window.SALA.acompanhar(null, function (linhas) {
-    if (!linhas.length && falhas < 3) falhas++
-    atualiza(linhas)
-  }, 2000)
+  // `linhas` vem null quando o navegador está sem rede: aí o telão avisa o
+  // operador para contar as mãos, em vez de mostrar um zero que mente
+  window.SALA.acompanhar(
+    null,
+    function (linhas) {
+      if (linhas === null) return semRede()
+      atualiza(linhas)
+    },
+    2000,
+  )
 })()
