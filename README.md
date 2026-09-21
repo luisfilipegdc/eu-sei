@@ -13,8 +13,13 @@ o conceito chega depois da experiência, e não antes. O critério de fracasso �
 simétrico: se alguém sair dizendo "então não dá para saber nada", o seminário
 falhou. O trabalho não é desistir de saber — é saber por quê.
 
-Estado atual: passos 1 e 2 da ordem de construção (motor de slides + a revelação),
-mais as seis telas de fonte e a janela do apresentador.
+Estado atual: passos 1 a 3 da ordem de construção — as 36 telas do roteiro (§4),
+a revelação, as seis telas de fonte da tecla `B` e a janela do apresentador.
+
+Três telas estão aqui como moldura, à espera dos passos 4 a 6: **13** (Wason),
+**17** (nuvem de palavras) e **30** (termômetro). Elas já ocupam o lugar certo,
+então o deck roda do começo ao fim. A tela **23** (a coda de Gettier) é oculta
+por padrão, como manda o §4: ligue na janela de controle quando sobrar tempo.
 
 ## Rodar
 

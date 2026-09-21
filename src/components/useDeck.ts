@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Slide } from '../slides/types'
 
 type Cursor = { index: number; step: number }
-type Shared = { cursor: Cursor; startedAt: number | null }
+type Shared = { cursor: Cursor; startedAt: number | null; coda: boolean }
 type Msg = { t: 'state'; state: Shared } | { t: 'hello' }
 
 const CHANNEL = 'eu-sei'
@@ -20,6 +20,9 @@ export type DeckState = {
   prev: () => void
   home: () => void
   startedAt: number | null
+  /** a coda de Gettier (tela 23) entra no fluxo */
+  coda: boolean
+  toggleCoda: () => void
 }
 
 /**
@@ -28,7 +31,11 @@ export type DeckState = {
  * das duas pode navegar. Quem chega depois pede o estado com um `hello`.
  */
 export function useDeck(deck: Slide[]): DeckState {
-  const [shared, setShared] = useState<Shared>({ cursor: { index: 0, step: 0 }, startedAt: null })
+  const [shared, setShared] = useState<Shared>({
+    cursor: { index: 0, step: 0 },
+    startedAt: null,
+    coda: false,
+  })
   const chan = useRef<BroadcastChannel | null>(null)
   const fromRemote = useRef(false)
   const latest = useRef(shared)
@@ -61,51 +68,78 @@ export function useDeck(deck: Slide[]): DeckState {
     chan.current?.postMessage({ t: 'state', state: shared } satisfies Msg)
   }, [shared])
 
-  const offsets = useMemo(() => {
-    let acc = 0
-    return deck.map((s) => {
-      const start = acc
-      acc += s.steps
-      return start
-    })
-  }, [deck])
-
-  const totalSteps = useMemo(() => deck.reduce((a, s) => a + s.steps, 0), [deck])
-
-  const next = useCallback(() => {
-    setShared(({ cursor: { index, step }, startedAt }) => {
-      const at = startedAt ?? Date.now()
-      if (step + 1 < deck[index].steps) return { cursor: { index, step: step + 1 }, startedAt: at }
-      if (index + 1 < deck.length) return { cursor: { index: index + 1, step: 0 }, startedAt: at }
-      return { cursor: { index, step }, startedAt: at }
-    })
-  }, [deck])
-
-  const prev = useCallback(() => {
-    setShared(({ cursor: { index, step }, startedAt }) => {
-      if (step > 0) return { cursor: { index, step: step - 1 }, startedAt }
-      if (index > 0) return { cursor: { index: index - 1, step: deck[index - 1].steps - 1 }, startedAt }
-      return { cursor: { index, step }, startedAt }
-    })
-  }, [deck])
-
-  const home = useCallback(
-    () => setShared((s) => ({ cursor: { index: 0, step: 0 }, startedAt: s.startedAt })),
-    [],
+  // a barra ignora a coda enquanto ela estiver oculta, senão nunca chega ao fim
+  const visible = useMemo(
+    () => deck.map((s) => (s.optional === true && !shared.coda ? 0 : s.steps)),
+    [deck, shared.coda],
   )
 
+  const offsets = useMemo(() => {
+    let acc = 0
+    return visible.map((n) => {
+      const start = acc
+      acc += n
+      return start
+    })
+  }, [visible])
+
+  const totalSteps = useMemo(() => visible.reduce((a, n) => a + n, 0), [visible])
+
+  /** telas ocultas (a coda) só entram no fluxo quando o operador liga */
+  const skip = useCallback(
+    (i: number, coda: boolean) => deck[i].optional === true && !coda,
+    [deck],
+  )
+
+  const seek = useCallback(
+    (from: number, dir: 1 | -1, coda: boolean) => {
+      let i = from
+      while (i >= 0 && i < deck.length && skip(i, coda)) i += dir
+      return i >= 0 && i < deck.length ? i : null
+    },
+    [deck, skip],
+  )
+
+  const next = useCallback(() => {
+    setShared((s) => {
+      const { index, step } = s.cursor
+      const at = s.startedAt ?? Date.now()
+      if (step + 1 < deck[index].steps) return { ...s, cursor: { index, step: step + 1 }, startedAt: at }
+      const i = seek(index + 1, 1, s.coda)
+      if (i === null) return { ...s, startedAt: at }
+      return { ...s, cursor: { index: i, step: 0 }, startedAt: at }
+    })
+  }, [deck, seek])
+
+  const prev = useCallback(() => {
+    setShared((s) => {
+      const { index, step } = s.cursor
+      if (step > 0) return { ...s, cursor: { index, step: step - 1 } }
+      const i = seek(index - 1, -1, s.coda)
+      if (i === null) return s
+      return { ...s, cursor: { index: i, step: deck[i].steps - 1 } }
+    })
+  }, [deck, seek])
+
+  const home = useCallback(() => setShared((s) => ({ ...s, cursor: { index: 0, step: 0 } })), [])
+
+  const toggleCoda = useCallback(() => setShared((s) => ({ ...s, coda: !s.coda })), [])
+
   const { index, step } = shared.cursor
+  const upcomingIndex = seek(index + 1, 1, shared.coda)
 
   return {
     index,
     step,
     slide: deck[index],
-    upcoming: deck[index + 1],
+    upcoming: upcomingIndex === null ? undefined : deck[upcomingIndex],
     progress: offsets[index] + step + 1,
     totalSteps,
     next,
     prev,
     home,
     startedAt: shared.startedAt,
+    coda: shared.coda,
+    toggleCoda,
   }
 }

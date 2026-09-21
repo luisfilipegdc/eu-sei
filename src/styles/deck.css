@@ -123,7 +123,7 @@
 .axis__pole {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: var(--t-xl);
+  font-size: min(var(--t-xl), calc((88vw - 18vmin) / var(--sum, 16) * 1.25));
   line-height: 1;
   letter-spacing: -0.02em;
   white-space: nowrap;
@@ -414,4 +414,308 @@
   font-size: var(--t-sm);
   line-height: 1.5;
   max-width: 60ch;
+}
+
+/* ---------- o resto das telas ---------- */
+
+.tag {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--t-sm);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--acc);
+  margin: 0;
+}
+
+.is-hidden {
+  visibility: hidden;
+}
+
+/* 02–04 afirmações */
+.claim {
+  font-family: var(--font-text);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 5.2vmin, 4.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 0;
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+/* 05 recap */
+.recap {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vmin;
+  max-width: 40ch;
+}
+
+.recap li {
+  display: flex;
+  gap: 1.8vmin;
+  align-items: baseline;
+  font-size: clamp(1rem, 2.7vmin, 2.1rem);
+  line-height: 1.28;
+}
+
+.recap b {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--sig);
+}
+
+.axis__foot {
+  margin-top: 2vmin;
+  max-width: 44ch;
+  text-align: center;
+  font-size: var(--t-md);
+}
+
+.mega--sm {
+  font-size: clamp(2rem, 8.4vmin, 7.4rem);
+  line-height: 0.98;
+}
+
+/* 11 referência — a única tela que pode passar de nove palavras */
+.ref {
+  border-left: 4px solid var(--acc);
+  padding-left: 3vmin;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1vmin;
+  font-size: clamp(1rem, 2.8vmin, 2.2rem);
+  line-height: 1.4;
+  max-width: 34ch;
+}
+
+.ref b {
+  font-weight: 600;
+}
+
+.ref i {
+  color: var(--mut);
+  font-size: 0.86em;
+}
+
+/* 13 Wason */
+.wason__seed {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 16vmin, 13rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 2vmin 0;
+}
+
+/* 17 nuvem — moldura */
+.cloud {
+  min-height: 30vmin;
+  width: min(80vw, 120vmin);
+  display: grid;
+  place-items: center;
+}
+
+.cloud::before {
+  content: 'as palavras aparecem aqui';
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mut);
+  opacity: 0.5;
+}
+
+/* 20 tríade */
+.triad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3vmin;
+  width: 100%;
+}
+
+.triad__col {
+  border-top: 3px solid var(--acc);
+  padding-top: 2.2vmin;
+}
+
+.triad__col b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.1rem, 3.8vmin, 3rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.triad__col span {
+  display: block;
+  color: var(--mut);
+  font-size: clamp(0.8rem, 2vmin, 1.4rem);
+  margin-top: 1.2vmin;
+  line-height: 1.35;
+}
+
+.triad__col--hi {
+  border-color: var(--sig);
+}
+
+.triad__col--hi b {
+  color: var(--acc);
+}
+
+/* 22 a amarra do Mênon */
+.tether {
+  display: flex;
+  align-items: center;
+  gap: 2.6vmin;
+  width: 100%;
+}
+
+.tether__box {
+  border: 3px solid currentColor;
+  padding: 2.4vmin 3vmin;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(0.9rem, 3.2vmin, 2.6rem);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-align: center;
+  flex: 0 1 auto;
+}
+
+.tether__link {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--acc);
+  position: relative;
+}
+
+.tether__link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 3px dashed var(--acc);
+  opacity: 0.45;
+}
+
+.tether__link b {
+  position: relative;
+  background: var(--paper);
+  padding: 0 1.6vmin;
+  font-weight: 500;
+}
+
+/* 26 versus */
+.versus {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 3vmin;
+  align-items: center;
+  width: 100%;
+}
+
+.versus__col b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.1rem, 4.4vmin, 3.4rem);
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.versus__col span {
+  display: block;
+  color: var(--mut);
+  font-size: clamp(0.8rem, 2.1vmin, 1.5rem);
+  margin-top: 1.4vmin;
+  line-height: 1.35;
+}
+
+.versus__mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 7vmin, 5.4rem);
+  color: var(--sig);
+  line-height: 1;
+}
+
+/* 30 termômetro — moldura */
+.therm {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4vmin;
+  width: 100%;
+}
+
+.therm__row {
+  display: flex;
+  align-items: center;
+  gap: 2.4vmin;
+}
+
+.therm__row .label {
+  width: 11ch;
+  flex: 0 0 auto;
+}
+
+.therm__track {
+  flex: 1;
+  height: 6vmin;
+  background: rgba(16, 19, 25, 0.08);
+}
+
+.therm__row--after .therm__track {
+  background: rgba(43, 79, 232, 0.12);
+}
+
+/* 33 a frase final */
+.final__mid {
+  font-family: var(--font-text);
+  font-weight: 500;
+  font-size: clamp(1.1rem, 3.4vmin, 2.6rem);
+  line-height: 1.3;
+  margin: 0;
+  max-width: 32ch;
+}
+
+/* 34 o QR e 35 os créditos */
+.eusei__end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8vmin;
+  margin-top: 2vmin;
+}
+
+.eusei__url {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--t-md);
+  margin: 0;
+}
+
+.credits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14ch, 1fr));
+  gap: 2vmin 3vmin;
+  width: 100%;
+}
+
+.credits span {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1rem, 3.4vmin, 2.8rem);
+  letter-spacing: -0.02em;
 }

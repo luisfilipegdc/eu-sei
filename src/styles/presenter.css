@@ -214,3 +214,8 @@
     grid-template-columns: 1fr;
   }
 }
+
+.pres__btn--on {
+  background: var(--ink);
+  color: var(--paper);
+}

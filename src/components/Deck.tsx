@@ -4,7 +4,30 @@ import type { Slide } from '../slides/types'
 import { useDeck } from './useDeck'
 import { useFullscreen } from './useFullscreen'
 import { useTimer } from './useTimer'
-import { Axis, DarkList, DarkMega, DarkTwoLine, EuSei, Illusion } from './screens'
+import {
+  Axis,
+  Blank,
+  Claim,
+  Cloud,
+  Credits,
+  DarkList,
+  DarkMega,
+  DarkTwoLine,
+  EuSei,
+  Final,
+  Illusion,
+  Mega,
+  Optional,
+  Question,
+  Recap,
+  Reference,
+  Tether,
+  Thermometer,
+  Triad,
+  TwoLine,
+  Versus,
+  Wason,
+} from './screens'
 import Sources from './Sources'
 
 /** Quando o foco estiver num input, as setas não podem trocar de slide. */
@@ -19,16 +42,48 @@ function Screen({ slide, step }: { slide: Slide; step: number }) {
   switch (slide.variant) {
     case 'eusei':
       return <EuSei slide={slide} step={step} />
+    case 'claim':
+      return <Claim slide={slide} step={step} />
+    case 'recap':
+      return <Recap slide={slide} step={step} />
     case 'axis':
       return <Axis slide={slide} step={step} />
+    case 'mega':
+      return <Mega slide={slide} step={step} />
+    case 'blank':
+      return <Blank />
+    case 'two-line':
+      return <TwoLine slide={slide} step={step} />
     case 'illusion':
       return <Illusion slide={slide} step={step} />
+    case 'question':
+      return <Question slide={slide} step={step} />
+    case 'reference':
+      return <Reference slide={slide} step={step} />
+    case 'wason':
+      return <Wason slide={slide} step={step} />
     case 'dark-list':
       return <DarkList slide={slide} step={step} />
     case 'dark-two-line':
       return <DarkTwoLine slide={slide} step={step} />
     case 'dark-mega':
       return <DarkMega slide={slide} step={step} />
+    case 'cloud':
+      return <Cloud slide={slide} step={step} />
+    case 'triad':
+      return <Triad slide={slide} step={step} />
+    case 'tether':
+      return <Tether slide={slide} step={step} />
+    case 'optional':
+      return <Optional slide={slide} step={step} />
+    case 'versus':
+      return <Versus slide={slide} step={step} />
+    case 'thermometer':
+      return <Thermometer slide={slide} step={step} />
+    case 'final':
+      return <Final slide={slide} step={step} />
+    case 'credits':
+      return <Credits slide={slide} step={step} />
   }
 }
 

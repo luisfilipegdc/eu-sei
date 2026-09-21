@@ -17,7 +17,7 @@ function isTyping(): boolean {
  * As duas janelas andam juntas: navegar aqui move lá, e vice-versa.
  */
 export default function Presenter() {
-  const { index, step, slide, upcoming, progress, totalSteps, next, prev, home, startedAt } =
+  const { index, step, slide, upcoming, progress, totalSteps, next, prev, home, startedAt, coda, toggleCoda } =
     useDeck(deck)
   const { remaining, running, label } = useTimer(startedAt)
   const [painel, setPainel] = useState<'resumo' | 'fontes'>('resumo')
@@ -80,6 +80,14 @@ export default function Presenter() {
             </button>
             <button type="button" className="pres__btn" onClick={home}>
               Home reinicia
+            </button>
+            <button
+              type="button"
+              className={`pres__btn${coda ? ' pres__btn--on' : ''}`}
+              onClick={toggleCoda}
+              title="A tela 23 (Gettier) é oculta por padrão"
+            >
+              coda Gettier: {coda ? 'no fluxo' : 'oculta'}
             </button>
           </div>
         </section>
