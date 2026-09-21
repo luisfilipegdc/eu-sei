@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#EFEEEA">
+<title>Como você sabe?</title>
+<style>
+  :root{
+    --paper:#EFEEEA; --ink:#101319; --acc:#2B4FE8; --sig:#C8341F;
+    --mut:#7C8192; --black:#08090C; --onblack:#F1F0EC;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:var(--paper);color:var(--ink);
+    font-family:"Archivo",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    display:flex;flex-direction:column;
+    padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
+    overscroll-behavior:none;
+  }
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+
+  header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .passo{font-weight:700;color:var(--acc)}
+
+  main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px;min-height:0}
+
+  .afirmacao{font-size:clamp(1.35rem,6.4vw,2rem);font-weight:600;line-height:1.2;letter-spacing:-.015em;text-wrap:balance}
+
+  /* alvos grandes: tem que dar para responder com uma mão só, em pé */
+  .escolha{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .escolha button{
+    font:inherit;font-weight:700;font-size:1.15rem;letter-spacing:.02em;
+    padding:26px 12px;border:3px solid var(--ink);background:transparent;color:var(--ink);
+    cursor:pointer;min-height:96px;
+  }
+  .escolha button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  .escolha button.v[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+  .escolha button.f[aria-pressed="true"]{background:var(--sig);border-color:var(--sig);color:#fff}
+
+  .conf label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .conf output{font-family:ui-monospace,Menlo,monospace;font-size:1.5rem;font-weight:700}
+  input[type=range]{width:100%;height:44px;accent-color:var(--acc)}
+
+  .enviar{
+    font:inherit;font-weight:700;font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;
+    padding:20px;border:0;background:var(--ink);color:var(--paper);width:100%;cursor:pointer;
+  }
+  .enviar:disabled{opacity:.28;cursor:default}
+
+  footer{margin-top:14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+
+  /* fim: nada de resultado no celular — o resultado é da sala, no telão */
+  .fim{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;text-align:center}
+  .fim .grande{font-size:clamp(1.6rem,8vw,2.4rem);font-weight:700;line-height:1.1;text-wrap:balance}
+
+  /* modo offline: a tela vira o voto, legível a três metros */
+  body.cartaz{background:var(--cor);color:#fff;justify-content:center;text-align:center}
+  body.cartaz header,body.cartaz footer{display:none}
+  .cartaz-valor{font-size:38vw;font-weight:800;line-height:.9;font-family:ui-monospace,Menlo,monospace}
+  .cartaz-rotulo{font-size:9vw;font-weight:700;letter-spacing:.04em}
+
+  @media (prefers-reduced-motion:no-preference){
+    main{animation:entra .22s ease both}
+    @keyframes entra{from{opacity:0}to{opacity:1}}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="mono">Como você sabe?</span>
+  <span class="mono passo" id="passo">1 de 3</span>
+</header>
+
+<main id="tela">
+  <p class="mono" id="rotulo">Afirmação 1</p>
+  <p class="afirmacao" id="texto">Usamos apenas 10% do nosso cérebro.</p>
+
+  <div class="escolha">
+    <button type="button" class="v" id="bv" aria-pressed="false">VERDADEIRO</button>
+    <button type="button" class="f" id="bf" aria-pressed="false">FALSO</button>
+  </div>
+
+  <div class="conf">
+    <label for="conf">
+      <span class="mono">Quanto você confia nisso</span>
+      <output id="confv">50</output>
+    </label>
+    <input type="range" id="conf" min="0" max="100" step="5" value="50">
+    <div class="mono" style="display:flex;justify-content:space-between;margin-top:2px">
+      <span>chute</span><span>certeza</span>
+    </div>
+  </div>
+
+  <button type="button" class="enviar" id="ok" disabled>Responder</button>
+</main>
+
+<footer>
+  <span class="mono" id="estado">sem nome · sem cadastro</span>
+  <span class="mono" id="rede"></span>
+</footer>
+
+<script src="/sala.js"></script>
+<script>
+(function(){
+  var AFIRMACOES = [
+    { id:'a1', rotulo:'Afirmação 1', texto:'Usamos apenas 10% do nosso cérebro.' },
+    { id:'a2', rotulo:'Afirmação 2', texto:'O aluno aprende mais quando o ensino é adaptado ao estilo de aprendizagem dele — visual, auditivo ou cinestésico.' },
+    { id:'a3', rotulo:'Afirmação 3', texto:'Sócrates nunca escreveu um livro.' }
+  ]
+
+  // ?q=a2 reabre uma afirmação sozinha — é assim que o termômetro do minuto 16:30 funciona
+  var params = new URLSearchParams(location.search)
+  var soUma = params.get('q')
+  var rodada = params.get('rodada') || ''
+  var lista = soUma ? AFIRMACOES.filter(function(a){ return a.id === soUma }) : AFIRMACOES
+  if (!lista.length) lista = AFIRMACOES
+
+  var i = 0, opcao = null
+  var $ = function(id){ return document.getElementById(id) }
+  var molde = $('tela').innerHTML  // para remontar a tela depois do cartaz
+
+  $('rede').textContent = SALA.modo === 'offline' ? 'modo cartaz' : ''
+
+  function pinta(){
+    var a = lista[i]
+    $('rotulo').textContent = a.rotulo
+    $('texto').textContent = a.texto
+    $('passo').textContent = (i+1) + ' de ' + lista.length
+    opcao = null
+    $('bv').setAttribute('aria-pressed','false')
+    $('bf').setAttribute('aria-pressed','false')
+    $('conf').value = 50
+    $('confv').textContent = '50'
+    $('ok').disabled = true
+  }
+
+  function escolhe(v){
+    opcao = v
+    $('bv').setAttribute('aria-pressed', String(v === 'V'))
+    $('bf').setAttribute('aria-pressed', String(v === 'F'))
+    $('ok').disabled = false
+    if (navigator.vibrate) navigator.vibrate(8)
+  }
+
+  /** (Re)liga os controles — a tela é remontada depois do cartaz do modo offline. */
+  function liga(){
+    $('bv').addEventListener('click', function(){ escolhe('V') })
+    $('bf').addEventListener('click', function(){ escolhe('F') })
+    $('conf').addEventListener('input', function(){ $('confv').textContent = this.value })
+    $('ok').addEventListener('click', responde)
+  }
+
+  function responde(){
+    if (!opcao) return
+    var a = lista[i]
+    var linha = {
+      tipo:'voto',
+      pergunta: a.id + (rodada ? '_' + rodada : ''),
+      opcao: opcao,
+      confianca: parseInt($('conf').value, 10)
+    }
+    $('ok').disabled = true
+    $('estado').textContent = 'enviando…'
+
+    SALA.enviar(linha).then(function(ok){
+      $('estado').textContent = ok ? 'resposta registrada' : 'sem rede — mostre a tela'
+      if (SALA.modo === 'offline' || !ok) return cartaz(linha)
+      i++
+      if (i < lista.length) { pinta() } else { fim() }
+    })
+  }
+
+  /**
+   * Plano B do §2.1: o celular não conversa com ninguém, vira o próprio voto.
+   * Vinte telas erguidas, o operador conta e digita o total no telão. Um toque
+   * na tela segue para a afirmação seguinte, depois que ele contou esta.
+   */
+  function cartaz(linha){
+    document.body.classList.add('cartaz')
+    document.body.style.setProperty('--cor', linha.opcao === 'V' ? '#2B4FE8' : '#C8341F')
+    $('tela').innerHTML =
+      '<div class="fim">' +
+      '<div class="cartaz-rotulo">' + (linha.opcao === 'V' ? 'VERDADEIRO' : 'FALSO') + '</div>' +
+      '<div class="cartaz-valor">' + linha.confianca + '</div>' +
+      '<div class="cartaz-rotulo">de 100</div>' +
+      (i + 1 < lista.length
+        ? '<p class="mono" style="color:rgba(255,255,255,.75);margin-top:6vh">toque para a próxima</p>'
+        : '') +
+      '</div>'
+
+    if (i + 1 >= lista.length) return
+    $('tela').addEventListener('click', function segue(){
+      $('tela').removeEventListener('click', segue)
+      document.body.classList.remove('cartaz')
+      i++
+      $('tela').innerHTML = molde
+      liga()
+      pinta()
+    })
+  }
+
+  function fim(){
+    $('passo').textContent = 'fim'
+    $('tela').innerHTML =
+      '<div class="fim">' +
+      '<p class="mono">pronto</p>' +
+      '<p class="grande">Agora olhe para a frente.</p>' +
+      '<p class="mono">o resultado é da sala, não do seu celular</p>' +
+      '</div>'
+  }
+
+  liga()
+  pinta()
+})()
+</script>
+</body>
+</html>

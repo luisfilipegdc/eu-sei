@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/v", "destination": "/votar/index.html" },
+    { "source": "/votar", "destination": "/votar/index.html" },
     { "source": "/apresentador", "destination": "/telao/index.html" },
     { "source": "/telao/:path*", "destination": "/telao/index.html" }
   ]
