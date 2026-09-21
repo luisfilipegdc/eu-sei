@@ -496,14 +496,42 @@
   .therm{display:flex;flex-direction:column;gap:2.4vmin;width:100%}
   .trow{display:flex;align-items:center;gap:2.4vmin}
   .trow .lb{font-family:"JetBrains Mono",monospace;font-size:clamp(10px,1.6vmin,19px);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);width:11ch;flex:0 0 auto}
-  .trow .track{flex:1;height:6vmin;background:rgba(0,0,0,.07);position:relative}
+  .trow .track{flex:1;height:9vmin;background:rgba(0,0,0,.06);position:relative;border-bottom:2px solid rgba(0,0,0,.14)}
   .trow .fill{position:absolute;inset:0 auto 0 0;width:0;background:var(--mut);transition:width .8s cubic-bezier(.4,0,.2,1)}
   .trow.after .fill{background:var(--acc)}
-  .trow .val{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:clamp(14px,2.6vmin,32px);width:5ch;text-align:right;flex:0 0 auto}
-  .tdelta{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(20px,4.6vmin,60px);letter-spacing:-.03em;text-align:center;opacity:0;transition:opacity .4s}
+  .trow .val{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:clamp(16px,3.4vmin,44px);width:6ch;text-align:right;flex:0 0 auto;font-variant-numeric:tabular-nums}
+  .tdelta{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(20px,4.6vmin,60px);letter-spacing:-.03em;line-height:1.05;text-align:center;text-wrap:balance;opacity:0;transition:opacity .4s;margin-top:1vmin}
   .tdelta.in{opacity:1}
   .tdelta b{color:var(--sig)}
-  .opbar.nums input{width:7ch;text-align:center}
+  /* a digitação é plano B: fica discreta, embaixo, e só acorda no foco */
+  .opbar.nums{margin-top:4vmin;opacity:.45;transition:opacity .2s}
+  .opbar.nums:hover,.opbar.nums:focus-within{opacity:1}
+  .opbar.nums input{width:9ch;text-align:center;padding:.9vmin 1vmin}
+  /* hierarquia das afirmações: numeral âncora à esquerda, frase dominando,
+     linha da ficha recuada. Três pesos bem diferentes, não três parágrafos. */
+  .afirmacao-grade{display:grid;grid-template-columns:auto 1fr;gap:0 4vmin;align-items:start;width:100%}
+  .afirmacao-num{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:clamp(46px,17vmin,230px);line-height:.78;letter-spacing:-.06em;
+    color:var(--ink);opacity:.13;grid-row:1 / span 3;margin-top:-.06em}
+  .afirmacao-grade .tag{grid-column:2;margin-bottom:1.4vmin}
+  .afirmacao-grade .claim{grid-column:2;max-width:20ch}
+  .afirmacao-grade .mini{grid-column:2;margin-top:2.6vmin;padding-top:2vmin;
+    border-top:1px solid rgba(0,0,0,.13);max-width:34ch}
+
+  /* wason 2-4-6 */
+  .wason-topo{display:flex;align-items:flex-end;justify-content:space-between;gap:4vmin;width:100%}
+  .wason-semente{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(34px,11vmin,150px);letter-spacing:-.045em;line-height:.9}
+  .wason-placar{display:flex;gap:4vmin;text-align:right}
+  .wason-placar b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(22px,6vmin,78px);line-height:1;letter-spacing:-.04em;color:var(--sig);font-variant-numeric:tabular-nums}
+  .wason-placar b.ok{color:var(--acc)}
+  .wason-placar span{display:block;font-family:"JetBrains Mono",monospace;font-size:clamp(9px,1.4vmin,16px);letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-top:.7vmin;max-width:14ch}
+  .wason-lista{list-style:none;display:flex;flex-wrap:wrap;gap:1.2vmin 1.6vmin;margin:2vmin 0 0;min-height:18vmin;align-content:flex-start}
+  .wason-lista li{display:flex;align-items:center;gap:1.2vmin;border:2px solid var(--line,#CFCEC8);padding:1vmin 1.8vmin;font-family:"JetBrains Mono",monospace;font-size:clamp(12px,2.4vmin,30px);font-weight:500;animation:pop .3s cubic-bezier(.2,1.2,.3,1)}
+  .wason-lista li i{font-style:normal;font-weight:700;font-size:1.15em}
+  .wason-lista li.sim{border-color:var(--acc);color:var(--acc)}
+  .wason-lista li.nao{border-color:var(--sig);color:var(--sig)}
+  .wason-lista:empty::before{content:"os trios aparecem aqui";font-family:"JetBrains Mono",monospace;font-size:clamp(11px,1.7vmin,20px);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);opacity:.5}
+
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -516,7 +544,8 @@
 </section>
 
 <section class="s" data-note="Diga duas vezes, devagar. Espere todo mundo escrever. ~30s. Não comente nada, nem com a cara.">
-  <div class="c">
+  <div class="c afirmacao-grade">
+    <span class="afirmacao-num" aria-hidden="true">1</span>
     <p class="tag">Afirmação 1</p>
     <p class="claim">Usamos apenas 10% do nosso cérebro.</p>
     <p class="mini">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp;&nbsp; Confiança ___ / 100</p>
@@ -524,7 +553,8 @@
 </section>
 
 <section class="s" data-note="A afirmação principal. Diga devagar, duas vezes. Continue sem expressão.">
-  <div class="c">
+  <div class="c afirmacao-grade">
+    <span class="afirmacao-num" aria-hidden="true">2</span>
     <p class="tag">Afirmação 2</p>
     <p class="claim">O aluno aprende mais quando o ensino é adaptado ao estilo de aprendizagem dele — visual, auditivo ou cinestésico.</p>
     <p class="mini">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp;&nbsp; Confiança ___ / 100</p>
@@ -532,7 +562,8 @@
 </section>
 
 <section class="s" data-note="A terceira. Ela é o Mênon disfarçado — a maioria vai acertar sem justificar.">
-  <div class="c">
+  <div class="c afirmacao-grade">
+    <span class="afirmacao-num" aria-hidden="true">3</span>
     <p class="tag">Afirmação 3</p>
     <p class="claim">Sócrates nunca escreveu um livro.</p>
     <p class="mini">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp;&nbsp; Confiança ___ / 100</p>
@@ -597,6 +628,21 @@
   <div class="c">
     <p class="big">Não está provado que é <span class="mut">falso</span>.</p>
     <p class="big step">A crença é mais <span class="sig">difundida</span> do que a evidência que a sustenta.</p>
+  </div>
+</section>
+
+<section class="s" id="wason" data-steps="2" data-note="WASON 2-4-6 · ORÇAMENTO 90 SEGUNDOS. 'Esses três números obedecem a uma regra que eu tenho na cabeça. Mandem trios pelo celular. Eu respondo só sim ou não.' A regra real é QUALQUER SEQUÊNCIA CRESCENTE. Quase sempre a turma supõe soma de dois e só manda trios que confirmam. Avance para revelar o contador. Fecho: 'vocês fizeram N testes, e N menos k deles só podiam dar sim' — liga direto na quinta pergunta: o que me faria mudar de ideia? Se estourar o tempo, corte o contador, não a atividade. (Wason, 1960.)">
+  <div class="c wide">
+    <p class="tag">Estes três obedecem a uma regra que eu tenho na cabeça</p>
+    <div class="wason-topo">
+      <div class="wason-semente">2 · 4 · 6</div>
+      <div class="wason-placar step" id="wplacar">
+        <div><b id="wconf">0</b><span>só podiam dar sim</span></div>
+        <div><b id="wref" class="ok">0</b><span>podiam dar não</span></div>
+      </div>
+    </div>
+    <ul class="wason-lista" id="wlista"></ul>
+    <p class="mini ctr" id="wrodape">mandem trios · eu respondo só sim ou não</p>
   </div>
 </section>
 
@@ -734,7 +780,7 @@
       <div class="trow after"><span class="lb">agora</span><span class="track"><i class="fill" id="f2"></i></span><span class="val" id="v2">—</span></div>
       <p class="tdelta step" id="tdelta">&nbsp;</p>
     </div>
-    <div class="opbar nums"><input id="n1" type="number" min="0" max="60" placeholder="antes" aria-label="Contagem no início"><input id="n2" type="number" min="0" max="60" placeholder="agora" aria-label="Contagem agora"><input id="nt" type="number" min="1" max="60" placeholder="total" aria-label="Total de pessoas"><span class="hint">Enter atualiza</span></div>
+    <div class="opbar nums"><input id="n1" type="number" min="0" max="60" placeholder="antes" aria-label="Contagem no início"><input id="n2" type="number" min="0" max="60" placeholder="agora" aria-label="Contagem agora"><input id="nt" type="number" min="1" max="60" placeholder="total" aria-label="Total de pessoas"><span class="hint">entrada manual · se a rede cair</span></div>
   </div>
 </section>
 
@@ -921,6 +967,7 @@
 </script>
 
 <!-- camada ao vivo: respostas do celular. A apresentação funciona sem ela. -->
+<script src="/qr-votar.js"></script>
 <script src="/sala.js"></script>
 <script src="/telao-ao-vivo.js"></script>
 </body>

@@ -16,6 +16,8 @@
   css.textContent = [
     '.ao-vivo{position:absolute;left:7vmin;right:7vmin;bottom:6vmin;display:flex;',
     'justify-content:space-between;align-items:flex-end;gap:3vmin;pointer-events:none}',
+    '.ao-vivo .qr{display:flex;align-items:flex-end;gap:2vmin}',
+    '.ao-vivo .qr svg{width:15vmin;height:15vmin;display:block;shape-rendering:crispEdges}',
     '.ao-vivo .url{font-family:"JetBrains Mono",monospace;font-size:clamp(11px,2vmin,24px);',
     'letter-spacing:.04em;color:var(--ink)}',
     '.ao-vivo .url b{color:var(--acc)}',
@@ -56,30 +58,49 @@
   var recap = document.querySelector('#deck .three')
   if (recap) telas.push({ sec: recap.closest('.s'), q: null })
 
+  // o Wason e a nuvem têm QR próprio: a câmera leva direto para a tela certa
+  var secWason = document.getElementById('wason')
+  var secNuvem = document.getElementById('nuvem')
+  if (secWason) telas.push({ sec: secWason, q: null, qr: 'wason', conta: 'trios' })
+  if (secNuvem) telas.push({ sec: secNuvem, q: null, qr: 'palavra', conta: 'palavras' })
+
+  // os QR são gerados por scripts/gerar-qr.mjs e vêm embutidos, sem baixar imagem
+  var qrs = window.QR_VOTAR || {}
+
   telas.forEach(function (t) {
+    var qr = qrs[t.qr || 'votar']
+    var endereco = qr ? qr.url.replace(/^https?:\/\//, '') : enderecoCurto
     var faixa = document.createElement('div')
     faixa.className = 'ao-vivo'
     faixa.innerHTML =
-      '<div class="url"><span>responda no celular</span><b>' + enderecoCurto + '</b></div>' +
-      '<div class="conta" data-conta>—<u>respostas</u></div>'
+      '<div class="qr">' +
+      (qr ? qr.svg : '') +
+      '<div class="url"><span>aponte a câmera</span><b>' + endereco + '</b></div>' +
+      '</div>' +
+      '<div class="conta" data-conta>—<u>' + (t.conta || 'respostas') + '</u></div>'
     t.sec.appendChild(faixa)
     t.faixa = faixa
   })
 
   function atualiza(linhas) {
     var porPergunta = {}
+    var nTrios = 0
+    var nPalavras = 0
     linhas.forEach(function (l) {
-      if (l.tipo !== 'voto') return
-      porPergunta[l.pergunta] = (porPergunta[l.pergunta] || 0) + 1
+      if (l.tipo === 'voto') porPergunta[l.pergunta] = (porPergunta[l.pergunta] || 0) + 1
+      else if (l.tipo === 'wason') nTrios++
+      else if (l.tipo === 'palavra') nPalavras++
     })
     telas.forEach(function (t) {
-      var n = t.q ? porPergunta[t.q] || 0 : porPergunta['a1'] || 0
-      var alvo = t.faixa.querySelector('[data-conta]')
-      alvo.innerHTML = n + '<u>' + (n === 1 ? 'resposta' : 'respostas') + '</u>'
+      var n =
+        t.qr === 'wason' ? nTrios : t.qr === 'palavra' ? nPalavras : porPergunta[t.q || 'a1'] || 0
+      var rotulo = t.conta || (n === 1 ? 'resposta' : 'respostas')
+      t.faixa.querySelector('[data-conta]').innerHTML = n + '<u>' + rotulo + '</u>'
       t.faixa.classList.remove('off')
     })
     termometro(linhas)
     nuvem(linhas)
+    wason(linhas)
   }
 
   function semRede() {
@@ -187,6 +208,77 @@
       cloud.appendChild(s)
     })
   }
+
+  /* ---------- Wason 2-4-6 (tela 13) ---------- */
+
+  var wlista = document.getElementById('wlista')
+
+  /**
+   * A regra real é qualquer sequência crescente: a < b < c. É só isso.
+   *
+   * O contador separa os trios em dois: os que **só podiam dar sim** e os que
+   * **podiam dar não**. A hipótese dominante da turma é sempre a que 2·4·6
+   * sugere — soma de dois —, então um trio com passo 2 em toda parte não
+   * consegue derrubar nada: ele ia dar sim de qualquer jeito. Qualquer outro
+   * trio é um teste de verdade, porque poderia ter voltado não.
+   *
+   * Essa razão é a evidência do viés, projetada ao vivo. É ela que liga na
+   * quinta pergunta do cartão: o que me faria mudar de ideia?
+   */
+  function crescente(t) {
+    return t[0] < t[1] && t[1] < t[2]
+  }
+
+  function podiaRefutar(t) {
+    return !(t[1] - t[0] === 2 && t[2] - t[1] === 2)
+  }
+
+  function wason(linhas) {
+    if (!wlista) return
+    var trios = []
+    linhas.forEach(function (l) {
+      if (l.tipo !== 'wason' || !l.texto) return
+      var t = l.texto.split(',').map(Number)
+      if (t.length !== 3 || t.some(isNaN)) return
+      trios.push(t)
+    })
+    if (wlista.childElementCount === trios.length) return
+
+    wlista.innerHTML = ''
+    var confirmam = 0
+    trios.forEach(function (t) {
+      var sim = crescente(t)
+      var testa = podiaRefutar(t)
+      if (!testa) confirmam++
+      var li = document.createElement('li')
+      li.className = sim ? 'sim' : 'nao'
+      li.innerHTML = '<span>' + t.join(' · ') + '</span><i>' + (sim ? '✓' : '✗') + '</i>'
+      wlista.appendChild(li)
+    })
+
+    var c = document.getElementById('wconf')
+    var r = document.getElementById('wref')
+    if (c) c.textContent = confirmam
+    if (r) r.textContent = trios.length - confirmam
+  }
+
+  /* ---------- tela 34: o QR das referências ---------- */
+
+  // a tela final trazia um QR desenhado à mão para um site que não tem o
+  // material. Troca pelo QR da página /referencias, que tem.
+  ;(function trocaQrFinal() {
+    var qr = qrs.referencias
+    if (!qr) return
+    var caixa = document.querySelector('#deck .qrbox')
+    if (caixa) caixa.innerHTML = qr.svg
+    var texto = document.querySelector('#deck .endrow .mini')
+    if (texto) {
+      texto.innerHTML =
+        'as referências e as cinco perguntas<br><b>' +
+        qr.url.replace(/^https?:\/\//, '') +
+        '</b>'
+    }
+  })()
 
   /* ---------- liga ---------- */
 

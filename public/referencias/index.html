@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EFEEEA">
+<title>Como você sabe? — as cinco perguntas e as fontes</title>
+<meta name="description" content="Material do seminário de epistemologia: as cinco perguntas, as três afirmações com as fontes, e por onde continuar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Archivo:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#EFEEEA; --ink:#101319; --acc:#2B4FE8; --sig:#C8341F;
+    --mut:#7C8192; --linha:#D6D5CF; --caixa:#F7F6F3;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0C0E13; --ink:#ECEBE6; --acc:#8FA4FF; --sig:#F0705A;
+      --mut:#8B92A3; --linha:#242A35; --caixa:#141821;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"Archivo",system-ui,sans-serif;
+       font-size:clamp(1rem,.96rem + .25vw,1.12rem);line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:68ch;margin:0 auto;padding:0 20px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+
+  header{padding:clamp(40px,9vw,88px) 0 clamp(26px,5vw,44px);border-bottom:1px solid var(--linha)}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.045em;line-height:.94;
+     font-size:clamp(2.6rem,11vw,5rem);margin:14px 0 0;text-wrap:balance}
+  h1 span{color:var(--acc)}
+  .sub{margin-top:18px;color:var(--mut);max-width:46ch}
+
+  section{padding:clamp(34px,6vw,58px) 0;border-bottom:1px solid var(--linha)}
+  h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.05;
+     font-size:clamp(1.5rem,4.4vw,2.2rem);margin:10px 0 18px;text-wrap:balance}
+  h3{font-size:1.06rem;font-weight:600;margin:26px 0 6px}
+  p{margin:0 0 14px}
+  p:last-child{margin-bottom:0}
+  a{color:var(--acc);text-underline-offset:3px}
+
+  /* as cinco perguntas: o item que tem que sobreviver sozinho */
+  ol.cinco{list-style:none;counter-reset:q;display:flex;flex-direction:column;gap:2px;margin:6px 0 0}
+  ol.cinco li{counter-increment:q;display:grid;grid-template-columns:3.4ch 1fr;gap:16px;align-items:baseline;
+              padding:18px 0;border-top:1px solid var(--linha)}
+  ol.cinco li::before{content:counter(q,decimal-leading-zero);font-family:"JetBrains Mono",monospace;
+              font-size:.78rem;color:var(--mut)}
+  ol.cinco b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.025em;
+             font-size:clamp(1.25rem,4.4vw,1.9rem);line-height:1.1}
+  ol.cinco li:last-child b{color:var(--acc)}
+  ol.cinco small{display:block;color:var(--mut);font-size:.9rem;line-height:1.5;margin-top:6px;font-weight:400}
+
+  .afirm{border:1px solid var(--linha);background:var(--caixa);padding:20px 22px;margin:0 0 14px}
+  .afirm .topo{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+  .afirm .frase{font-weight:600;font-size:1.1rem;line-height:1.32;margin-bottom:12px;text-wrap:balance}
+  .veredito{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500}
+  .v-falso{color:var(--sig)} .v-verdadeiro{color:var(--acc)} .v-cuidado{color:var(--mut)}
+  .afirm .fonte{font-size:.9rem;color:var(--mut);line-height:1.55}
+
+  .destaque{border-left:3px solid var(--acc);padding-left:18px;margin:20px 0;font-size:1.06rem}
+  .destaque cite{display:block;font-style:normal;color:var(--mut);font-size:.86rem;margin-top:8px}
+
+  ul.refs{list-style:none;display:flex;flex-direction:column;gap:14px;font-size:.94rem;line-height:1.5}
+  ul.refs li{padding-left:18px;border-left:1px solid var(--linha)}
+  ul.refs b{font-weight:600}
+
+  footer{padding:clamp(34px,6vw,60px) 0 clamp(50px,10vw,90px);color:var(--mut);font-size:.9rem}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <p class="mono">Seminário de epistemologia · Pedagogia</p>
+  <h1>Como você sabe<span>?</span></h1>
+  <p class="sub">Isto é o que ficou de pé depois dos dezoito minutos: as cinco perguntas,
+  as três afirmações com as fontes, e por onde continuar se você quiser ir mais fundo.</p>
+</div></header>
+
+<main>
+
+<section><div class="wrap">
+  <p class="mono">O cartão</p>
+  <h2>As cinco perguntas</h2>
+  <p>Não é lembrancinha, é ferramenta. Elas servem para qualquer coisa que alguém
+  afirme na sua frente — inclusive você mesmo.</p>
+  <ol class="cinco">
+    <li><div><b>Como você sabe?</b><small>Separa o que você viu do que te contaram.</small></div></li>
+    <li><div><b>Quem te contou?</b><small>Toda corrente de testemunho encosta, em algum ponto, em algo que não é "alguém me disse". Encosta em quê?</small></div></li>
+    <li><div><b>Que evidência você tem?</b><small>Existir um estudo não é a mesma coisa que ter lido o estudo.</small></div></li>
+    <li><div><b>E se você estiver errado?</b><small>Se a resposta não muda nada, não era conhecimento — era hábito.</small></div></li>
+    <li><div><b>O que me faria mudar de ideia?</b><small>A melhor das cinco. Se a resposta for "nada", aquilo não é conhecimento. É identidade.</small></div></li>
+  </ol>
+</div></section>
+
+<section><div class="wrap">
+  <p class="mono">O que estava na ficha</p>
+  <h2>As três afirmações</h2>
+
+  <div class="afirm">
+    <div class="topo"><span class="mono">Afirmação 1</span><span class="veredito v-falso">falso</span></div>
+    <p class="frase">Usamos apenas 10% do nosso cérebro.</p>
+    <p class="fonte">Não há região do cérebro que fique ociosa: neuroimagem mostra atividade
+    distribuída, e lesões em praticamente qualquer área produzem déficit. A frase circula desde
+    o começo do século XX sem nunca ter tido origem em um estudo.</p>
+  </div>
+
+  <div class="afirm">
+    <div class="topo"><span class="mono">Afirmação 2</span><span class="veredito v-cuidado">não é tão simples</span></div>
+    <p class="frase">O aluno aprende mais quando o ensino é adaptado ao estilo de aprendizagem
+    dele — visual, auditivo ou cinestésico.</p>
+    <p class="fonte">Preferências existem, e são reais. O que foi testado é outra coisa: a
+    <b>hipótese de correspondência</b> — se ensinar no estilo preferido faz aprender mais.
+    Pashler, McDaniel, Rohrer e Bjork (2008) procuraram estudos com o desenho capaz de testar
+    isso; quase não existiam, e os que existiam não sustentaram a hipótese.
+    <br><br>Repare no que não está sendo dito: <b>não está provado que é falso</b>. A crença é
+    muito mais difundida do que a evidência que a sustenta. Essas duas frases são diferentes, e
+    a diferença entre elas é a aula inteira.</p>
+  </div>
+
+  <div class="afirm">
+    <div class="topo"><span class="mono">Afirmação 3</span><span class="veredito v-verdadeiro">verdadeiro</span></div>
+    <p class="frase">Sócrates nunca escreveu um livro.</p>
+    <p class="fonte">Verdadeiro — e é aqui que a maioria acerta sem saber. Tudo o que
+    conhecemos dele chegou por terceiros: Platão, Xenofonte, Aristófanes. Quem marcou certo
+    por chute tem <b>crença</b> e <b>verdade</b>, e não tem <b>justificação</b>. É exatamente
+    por isso que a terceira peça existe.</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="mono">O conceito</p>
+  <h2>Epistemologia em um parágrafo</h2>
+  <p>É o ramo da filosofia que investiga a <b>origem, a natureza, o valor e os limites</b> do
+  conhecimento. Ela não pergunta <i>o que</i> sabemos — isso é conteúdo. Pergunta o que faz uma
+  coisa <b>contar como</b> conhecimento.</p>
+  <p>A palavra parece grega, mas foi cunhada em 1854, pelo escocês James Ferrier. As raízes é
+  que são gregas: <i>epistḗmē</i> (conhecimento) contra <i>dóxa</i> (opinião), e <i>lógos</i> —
+  que não é só "estudo", é palavra, razão, e a <b>conta que se dá</b> de uma coisa.</p>
+  <h3>As três peças</h3>
+  <p><b>Crença</b> (você acredita) · <b>verdade</b> (é o caso) · <b>justificação</b> (você
+  consegue dar conta). As duas primeiras a gente resolve sozinho. A terceira é a única que
+  precisa ser mostrada para alguém — e é onde quase sempre falha.</p>
+  <div class="destaque">
+    A opinião verdadeira é um guia tão bom quanto o conhecimento — <b>enquanto ela fica</b>.
+    O problema é que ela foge, como as estátuas de Dédalo, que diziam sair andando se ninguém
+    as amarrasse. Opinião verdadeira amarrada pela razão vira conhecimento.
+    <cite>Platão, <i>Mênon</i>, 97a–98a</cite>
+  </div>
+  <h3>E a coda de 1963</h3>
+  <p>Edmund Gettier mostrou, em três páginas, que às vezes nem as três peças juntas bastam: dá
+  para ter crença, verdade <i>e</i> justificação e ainda assim hesitar em chamar aquilo de
+  conhecimento. Mas essa conversa só começa depois de levar a justificação a sério.</p>
+</div></section>
+
+<section><div class="wrap">
+  <p class="mono">A atividade dos números</p>
+  <h2>2 · 4 · 6, e por que quase ninguém tenta derrubar a própria ideia</h2>
+  <p>A regra era <b>qualquer sequência crescente</b>. Quase todo mundo supõe "soma de dois" e
+  manda 8-10-12, 20-22-24, 100-102-104 — trios que <b>só podiam dar sim</b>. Testar 1-2-3, ou
+  9-4-2, é o que teria revelado a regra, porque poderia ter voltado não.</p>
+  <p>Peter Wason mostrou isso em 1960, e o nome disso é <b>viés de confirmação</b>: a tendência
+  a procurar o que confirma, não o que derruba. É a quinta pergunta do cartão, em forma de
+  jogo.</p>
+</div></section>
+
+<section><div class="wrap">
+  <p class="mono">Para quem vai dar aula</p>
+  <h2>Por que isso não é só filosofia</h2>
+  <p>Quando você entra numa sala de aula, já tomou decisões sobre conhecimento: sobre o que
+  conta como saber, o que é um erro, o que é uma boa resposta. Você tomou essas decisões
+  sabendo ou sem saber. Como diz o material da Aula 2, <b>não existe docência neutra</b>.</p>
+  <p>A versão fácil dessa conversa é "transmitir é ruim, construir é bom". Ela não se sustenta:
+  tem conteúdo e tem momento — principalmente com iniciante, em conteúdo de base — em que
+  explicar direto é a escolha certa, e "descubra sozinho" é ineficiente. E tem conteúdo em que
+  entregar a resposta pronta destrói exatamente o que você queria ensinar.</p>
+  <p>Então a pergunta não é "qual método é melhor". É: <b>que tipo de conhecimento é este, e o
+  que conta como saber isto?</b> Essa pergunta é epistemológica, não metodológica — e ela vem
+  antes da escolha do método.</p>
+  <div class="destaque">
+    Uma forma de compreender e explicar <b>como conhecemos o que sabemos</b>.
+    <cite>Esteban (2003, p. 13), citado na Aula 2 — Aspectos Ontológicos e Epistemológicos da Docência</cite>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <p class="mono">Uma última coisa</p>
+  <h2>Isto não é relativismo</h2>
+  <p>"A Terra é redonda" e "usamos 10% do cérebro" <b>não estão empatadas</b>. Uma tem muito
+  mais coisa sustentando do que a outra. O trabalho não é desistir de saber — é saber por quê.</p>
+</div></section>
+
+<section><div class="wrap">
+  <p class="mono">Por onde continuar</p>
+  <h2>As fontes</h2>
+  <ul class="refs">
+    <li><b>PASHLER, H.; McDANIEL, M.; ROHRER, D.; BJORK, R.</b> Learning Styles: Concepts and
+      Evidence. <i>Psychological Science in the Public Interest</i>, v. 9, n. 3, p. 105–119, 2008.</li>
+    <li><b>WASON, P. C.</b> On the failure to eliminate hypotheses in a conceptual task.
+      <i>Quarterly Journal of Experimental Psychology</i>, v. 12, n. 3, p. 129–140, 1960.</li>
+    <li><b>PLATÃO.</b> <i>Mênon</i>, 97a–98a. (A opinião verdadeira e as estátuas de Dédalo.)</li>
+    <li><b>PLATÃO.</b> <i>Teeteto</i>. (A maiêutica, a parteira Fenarete e o teste do ovo de vento.)</li>
+    <li><b>PLATÃO.</b> <i>Apologia de Sócrates</i>. (Onde <i>não</i> está escrito "só sei que nada sei".)</li>
+    <li><b>GETTIER, E.</b> Is Justified True Belief Knowledge? <i>Analysis</i>, v. 23, n. 6,
+      p. 121–123, 1963.</li>
+    <li><b>FREIRE, P.</b> <i>Pedagogia da autonomia: saberes necessários à prática educativa.</i>
+      34. ed. São Paulo: Paz e Terra, 2005.</li>
+    <li><b>CUNHA, M. I. da.</b> Relação ensino e pesquisa. In: VEIGA, I. P. A. (Org.).
+      <i>Didática: o ensino e suas relações.</i> 9. ed. Campinas: Papirus, 2007, p. 165–186.</li>
+    <li><b>ESTEBAN, M. P. S.</b> <i>Investigación cualitativa en educación: fundamentos y
+      tradiciones.</i> España: McGraw-Hill, 2003.</li>
+  </ul>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <p>Seminário “Como você sabe?” · Luis · Carlos · Malu · Renata · Rebeca · Mariana · Dalila</p>
+  <p style="margin-top:8px"><a href="/">Rever a apresentação</a></p>
+</div></footer>
+
+</body>
+</html>

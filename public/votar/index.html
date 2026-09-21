@@ -53,6 +53,15 @@
   footer{margin-top:14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
 
   /* fim: nada de resultado no celular — o resultado é da sala, no telão */
+  /* wason e nuvem */
+  .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .trio input{font:inherit;font-weight:700;font-size:1.8rem;text-align:center;padding:18px 4px;
+    border:3px solid var(--ink);background:transparent;color:var(--ink);width:100%;min-height:84px}
+  .trio input:focus{outline:none;border-color:var(--acc)}
+  .palavra{font:inherit;font-size:1.5rem;font-weight:600;padding:20px 14px;width:100%;
+    border:3px solid var(--ink);background:transparent;color:var(--ink)}
+  .palavra:focus{outline:none;border-color:var(--acc)}
+
   .fim{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;text-align:center}
   .fim .grande{font-size:clamp(1.6rem,8vw,2.4rem);font-weight:700;line-height:1.1;text-wrap:balance}
 
@@ -112,15 +121,20 @@
     { id:'a3', rotulo:'Afirmação 3', texto:'Sócrates nunca escreveu um livro.' }
   ]
 
-  // ?q=a2 reabre uma afirmação sozinha — é assim que o termômetro do minuto 16:30 funciona
+  var $ = function(id){ return document.getElementById(id) }
   var params = new URLSearchParams(location.search)
+
+  // três modos, um QR para cada: afirmações, trio do Wason, palavra da nuvem
+  if (params.has('wason')) return modoWason()
+  if (params.has('palavra')) return modoPalavra()
+
+  // ?q=a2 reabre uma afirmação sozinha — é assim que o termômetro do minuto 16:30 funciona
   var soUma = params.get('q')
   var rodada = params.get('rodada') || ''
   var lista = soUma ? AFIRMACOES.filter(function(a){ return a.id === soUma }) : AFIRMACOES
   if (!lista.length) lista = AFIRMACOES
 
   var i = 0, opcao = null
-  var $ = function(id){ return document.getElementById(id) }
   var molde = $('tela').innerHTML  // para remontar a tela depois do cartaz
 
   $('rede').textContent = SALA.modo === 'offline' ? 'modo cartaz' : ''
@@ -215,6 +229,77 @@
 
   liga()
   pinta()
+
+  /* ---------- Wason 2-4-6: manda trios, quantos quiser ---------- */
+
+  function modoWason(){
+    $('passo').textContent = 'wason'
+    $('tela').innerHTML =
+      '<p class="mono">A regra vale para 2 · 4 · 6</p>' +
+      '<p class="afirmacao">Mande três números e eu respondo só sim ou não.</p>' +
+      '<div class="trio">' +
+      '<input type="number" inputmode="numeric" id="t1" aria-label="primeiro número">' +
+      '<input type="number" inputmode="numeric" id="t2" aria-label="segundo número">' +
+      '<input type="number" inputmode="numeric" id="t3" aria-label="terceiro número">' +
+      '</div>' +
+      '<button type="button" class="enviar" id="ok">Mandar o trio</button>' +
+      '<p class="mono" id="hist" style="line-height:1.9"></p>'
+
+    var meus = []
+    function lidos(){
+      return ['t1','t2','t3'].map(function(k){ return $(k).value.trim() })
+    }
+    function valida(){
+      var v = lidos()
+      $('ok').disabled = v.some(function(x){ return x === '' || isNaN(Number(x)) })
+    }
+    ;['t1','t2','t3'].forEach(function(k){ $(k).addEventListener('input', valida) })
+    valida()
+
+    $('ok').addEventListener('click', function(){
+      var v = lidos().map(Number)
+      $('ok').disabled = true
+      SALA.enviar({ tipo:'wason', texto: v.join(',') }).then(function(ok){
+        $('estado').textContent = ok ? 'trio enviado — olhe o telão' : 'sem rede — fale em voz alta'
+        meus.unshift(v.join(' · '))
+        $('hist').textContent = 'seus trios: ' + meus.slice(0, 6).join('   ')
+        ;['t1','t2','t3'].forEach(function(k){ $(k).value = '' })
+        $('t1').focus()
+        valida()
+      })
+    })
+    $('t1').focus()
+  }
+
+  /* ---------- nuvem: uma palavra por pessoa ---------- */
+
+  function modoPalavra(){
+    $('passo').textContent = 'nuvem'
+    $('tela').innerHTML =
+      '<p class="mono">Uma palavra só</p>' +
+      '<p class="afirmacao">De onde veio o que você sabe?</p>' +
+      '<input type="text" id="pal" class="palavra" autocomplete="off" autocapitalize="none" ' +
+      'spellcheck="false" maxlength="24" placeholder="digite aqui" aria-label="sua palavra">' +
+      '<button type="button" class="enviar" id="ok" disabled>Mandar</button>'
+
+    $('pal').addEventListener('input', function(){
+      $('ok').disabled = this.value.trim().length < 2
+    })
+    $('ok').addEventListener('click', function(){
+      var p = $('pal').value.trim()
+      if (!p) return
+      $('ok').disabled = true
+      SALA.enviar({ tipo:'palavra', texto: p }).then(function(ok){
+        $('tela').innerHTML =
+          '<div class="fim">' +
+          '<p class="mono">' + (ok ? 'no telão' : 'sem rede — diga em voz alta') + '</p>' +
+          '<p class="grande">' + p + '</p>' +
+          '<p class="mono">agora olhe para a frente</p>' +
+          '</div>'
+      })
+    })
+    $('pal').focus()
+  }
 })()
 </script>
 </body>
