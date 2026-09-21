@@ -33,14 +33,14 @@ function Screen({ slide, step }: { slide: Slide; step: number }) {
 }
 
 export default function Deck({ slides = defaultDeck }: { slides?: Slide[] }) {
-  const { index, step, slide, progress, totalSteps, next, prev, home, started } = useDeck(slides)
+  const { index, step, slide, progress, totalSteps, next, prev, home, startedAt } = useDeck(slides)
   const toggleFullscreen = useFullscreen()
 
   const [notes, setNotes] = useState(false)
   const [showSources, setShowSources] = useState(false)
   const [openSource, setOpenSource] = useState<string | null>(null)
   const [timerOn, setTimerOn] = useState(false)
-  const { remaining, label } = useTimer(timerOn && started)
+  const { remaining, label } = useTimer(startedAt)
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
