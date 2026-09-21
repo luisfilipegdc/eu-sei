@@ -47,6 +47,25 @@
     'letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:.6vmin;opacity:.8}',
     '.ao-vivo.off .qr svg{opacity:.25}',
     '.ao-vivo.off .conta{color:var(--sig)}',
+    // nas telas de afirmação o bloco de resposta ocupa a coluna da direita,
+    // que antes ficava vazia, em vez de se espremer sob a frase
+    '.ao-vivo--lado{left:auto;right:7vmin;top:50%;bottom:auto;transform:translateY(-50%);',
+    'width:min(34vw,40ch);flex-direction:column;align-items:flex-start;gap:var(--e4,2.8vmin)}',
+    '.ao-vivo--lado .qr{flex-direction:column;align-items:flex-start;gap:var(--e3,2.1vmin)}',
+    '.ao-vivo--lado .qr svg{width:27vmin;height:27vmin}',
+    '.ao-vivo--lado .url{max-width:none}',
+    '.ao-vivo--lado .conta{text-align:left;padding-top:var(--e2,1.6vmin);',
+    'border-top:1px solid rgba(16,19,25,.14);width:100%}',
+    '.ao-vivo--lado .conta u{display:inline;margin-left:.7em}',
+    // em 4:3 não há largura para duas colunas: o bloco volta para o rodapé
+    '@media (max-aspect-ratio:4/3){',
+    '.ao-vivo--lado{left:7vmin;right:7vmin;top:auto;bottom:5.5vmin;transform:none;',
+    'width:auto;flex-direction:row;align-items:flex-end;justify-content:space-between}',
+    '.ao-vivo--lado .qr{flex-direction:row;align-items:center}',
+    '.ao-vivo--lado .qr svg{width:19vmin;height:19vmin}',
+    '.ao-vivo--lado .conta{width:auto;text-align:right;border-top:0;padding-top:0}',
+    '.ao-vivo--lado .conta u{display:block;margin-left:0}',
+    '}',
   ].join('')
   document.head.appendChild(css)
 
@@ -103,7 +122,9 @@
     var endereco = qr ? qr.url.replace(/^https?:\/\//, '') : enderecoCurto
     var texto = CHAMADAS[t.qr] || PADRAO
     var faixa = document.createElement('div')
-    faixa.className = 'ao-vivo'
+    // só as telas de afirmação têm coluna livre à direita; as outras usam a
+    // faixa de rodapé, porque o conteúdo delas ocupa a largura toda
+    faixa.className = 'ao-vivo' + (t.qr && t.qr.indexOf('a') === 0 && t.qr.length === 2 ? ' ao-vivo--lado' : '')
     faixa.innerHTML =
       '<div class="qr">' +
       (qr ? qr.svg : '') +
@@ -347,6 +368,7 @@
       })
       return {
         frase: a.frase,
+        curta: a.curta,
         v: votos.filter(function (l) {
           return l.opcao === 'V'
         }).length,

@@ -552,21 +552,40 @@
   .placar-legenda .cv{background:var(--acc)} .placar-legenda .cf{background:var(--sig)}
   /* no recap o gráfico entra inteiro, num avanço só, e mais compacto —
      ele divide a tela com as três afirmações escritas */
-  .recap-grafico{margin-top:3vmin;display:flex;flex-direction:column;gap:2vmin}
-  .recap-grafico .placar{gap:2vmin}
+  .recap-grafico{margin-top:var(--e4);display:flex;flex-direction:column;gap:var(--e3)}
+  .recap-grafico .placar{gap:var(--e3)}
   .recap-grafico .barra-empilhada{height:4.2vmin}
   .recap-grafico .placar-cab{margin-bottom:.8vmin}
+  .recap-grafico .marcador{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    color:var(--sig);margin-right:.6em}
+  /* o rodapé do QR é absoluto: o conteúdo precisa reservar a altura dele,
+     senão a legenda fica embaixo do código */
+  #recap .c{padding-bottom:24vmin}
 
   /* hierarquia das afirmações: numeral âncora à esquerda, frase dominando,
      linha da ficha recuada. Três pesos bem diferentes, não três parágrafos. */
-  .afirmacao-grade{display:grid;grid-template-columns:auto 1fr;gap:0 4vmin;align-items:start;width:100%}
+  /* Duas colunas com trabalhos diferentes: a esquerda é para ler a afirmação,
+     a direita é para responder. Antes a frase ficava presa em 20 caracteres,
+     quebrando em seis linhas, e a metade direita da tela não fazia nada. */
+  .afirmacao-grade{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 var(--e5);
+    align-items:start;width:100%;max-width:58%;
+    /* `.c` centraliza com margin auto; aqui a coluna tem que encostar na
+       esquerda, senão o bloco de resposta da direita fica por cima */
+    margin-left:0;margin-right:auto}
   .afirmacao-num{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
-    font-size:clamp(46px,17vmin,230px);line-height:.78;letter-spacing:-.06em;
+    font-size:var(--t6);line-height:.78;letter-spacing:-.06em;
     color:var(--ink);opacity:.13;grid-row:1 / span 3;margin-top:-.06em}
-  .afirmacao-grade .tag{grid-column:2;margin-bottom:1.4vmin}
-  .afirmacao-grade .claim{grid-column:2;max-width:20ch}
-  .afirmacao-grade .mini{grid-column:2;margin-top:2.6vmin;padding-top:2vmin;
+  .afirmacao-grade .tag{grid-column:2;margin-bottom:var(--e2)}
+  /* 28ch é medida de leitura para tipo grande: três linhas, não seis */
+  .afirmacao-grade .claim{grid-column:2;max-width:28ch}
+  .afirmacao-grade .mini{grid-column:2;margin-top:var(--e4);padding-top:var(--e3);
     border-top:1px solid rgba(0,0,0,.13);max-width:34ch}
+
+  @media (max-aspect-ratio:4/3){
+    /* projetor 4:3 não tem largura para duas colunas: a frase ocupa tudo e o
+       bloco de resposta volta para o rodapé (regra no telao-ao-vivo.js) */
+    .afirmacao-grade{max-width:100%;padding-bottom:26vmin}
+  }
 
   /* wason 2-4-6 */
   .wason-topo{display:flex;align-items:flex-end;justify-content:space-between;gap:4vmin;width:100%}
