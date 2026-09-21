@@ -33,11 +33,11 @@ export const deck: Slide[] = [
     dark: true,
     // As cinco perguntas do cartão de papel. A quinta é a que liga no Wason.
     items: [
-      'Isso é verdade?',
-      'Como eu sei?',
-      'De onde veio o que eu sei?',
-      'Isso basta para eu afirmar?',
-      'O que me faria mudar de ideia?',
+      'Como você sabe?',
+      'Quem te contou?',
+      'Que evidência você tem?',
+      'E se você estiver errado?',
+      'Isso basta?',
     ],
     steps: 5,
     note: 'Uma pergunta por avanço, sem pressa. Leia em voz alta. É a primeira tela preta do deck — deixe o corte trabalhar.',
@@ -58,12 +58,4 @@ export const deck: Slide[] = [
     steps: 1,
     note: 'Silêncio. Conte até três antes de avançar.',
   },
-]
-
-/** Telas de reserva chamadas pela tecla B (fontes). Conteúdo entra no passo 3. */
-export const sources: { key: string; text: string }[] = [
-  { key: '1', text: 'Pashler, H. et al. (2008). Learning Styles: Concepts and Evidence. Psychological Science in the Public Interest, 9(3), 105–119.' },
-  { key: '2', text: 'Wason, P. C. (1960). On the failure to eliminate hypotheses in a conceptual task. Quarterly Journal of Experimental Psychology, 12(3), 129–140.' },
-  { key: '3', text: 'Platão. Mênon, 97a–98a.' },
-  { key: '4', text: 'Gettier, E. (1963). Is Justified True Belief Knowledge? Analysis, 23(6), 121–123.' },
 ]

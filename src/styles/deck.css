@@ -306,3 +306,112 @@
   gap: 1.4vmin 2.4vmin;
   margin-top: 3vmin;
 }
+
+/* ---------- as seis telas de fonte (tecla B) ---------- */
+
+.overlay--sources,
+.overlay--source {
+  inset: 0;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 7vmin 8vmin;
+  gap: 2.4vmin;
+}
+
+.ftitle {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--t-lg);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  margin: 0 0 2vmin;
+  text-wrap: balance;
+}
+
+.fgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22ch, 1fr));
+  gap: 1.6vmin;
+}
+
+.fb {
+  border: 2px solid var(--ink);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 2.4vmin 2.2vmin;
+  cursor: pointer;
+  transition: background-color var(--in), color var(--in);
+}
+
+.fb:hover,
+.fb:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+  outline: none;
+}
+
+.fb b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--t-md);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.fb span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-top: 0.9vmin;
+}
+
+.fhint {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mut);
+  margin: 2.4vmin 0 0;
+}
+
+.source__lead {
+  max-width: 26ch;
+}
+
+.source__follow {
+  font-size: var(--t-md);
+  line-height: 1.32;
+  max-width: 44ch;
+  margin: 0;
+  color: var(--mut);
+}
+
+.source__basta {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--t-md);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sig);
+  margin: 2vmin 0 0;
+}
+
+/* o pouso é fala do apresentador: só aparece com a tecla N */
+.source__pouso {
+  margin: 3vmin 0 0;
+  padding: 1.8vmin 2.2vmin;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--t-sm);
+  line-height: 1.5;
+  max-width: 60ch;
+}

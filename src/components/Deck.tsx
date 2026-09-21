@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { deck as defaultDeck, sources } from '../slides/deck'
+import { deck as defaultDeck } from '../slides/deck'
 import type { Slide } from '../slides/types'
 import { useDeck } from './useDeck'
 import { useFullscreen } from './useFullscreen'
 import { useTimer } from './useTimer'
 import { Axis, DarkList, DarkMega, DarkTwoLine, EuSei, Illusion } from './screens'
+import Sources from './Sources'
 
 /** Quando o foco estiver num input, as setas não podem trocar de slide. */
 function isTyping(): boolean {
@@ -37,12 +38,15 @@ export default function Deck({ slides = defaultDeck }: { slides?: Slide[] }) {
 
   const [notes, setNotes] = useState(false)
   const [showSources, setShowSources] = useState(false)
+  const [openSource, setOpenSource] = useState<string | null>(null)
   const [timerOn, setTimerOn] = useState(false)
   const { remaining, label } = useTimer(timerOn && started)
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (isTyping()) return
+      // com as fontes abertas o deck não anda: a maiêutica acontece por cima dele
+      if (showSources && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) return
       switch (e.key) {
         case 'ArrowRight':
           e.preventDefault()
@@ -67,10 +71,13 @@ export default function Deck({ slides = defaultDeck }: { slides?: Slide[] }) {
         case 'b':
         case 'B':
           setShowSources((v) => !v)
+          setOpenSource(null)
           break
         case 'Escape':
-          setNotes(false)
-          setShowSources(false)
+          // uma fonte aberta volta para o menu das seis; o menu fecha
+          if (openSource) setOpenSource(null)
+          else if (showSources) setShowSources(false)
+          else setNotes(false)
           break
         case 'Home':
           home()
@@ -79,7 +86,7 @@ export default function Deck({ slides = defaultDeck }: { slides?: Slide[] }) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [next, prev, home, toggleFullscreen])
+  }, [next, prev, home, toggleFullscreen, openSource, showSources])
 
   const onClick = useCallback(
     (e: React.MouseEvent) => {
@@ -132,27 +139,7 @@ export default function Deck({ slides = defaultDeck }: { slides?: Slide[] }) {
       ) : null}
 
       {showSources ? (
-        <aside className="overlay overlay--sources">
-          <p className="overlay__title">fontes · telas de reserva</p>
-          <ul className="sources__list">
-            {sources.map((s) => (
-              <li key={s.key}>
-                <kbd>{s.key}</kbd>
-                {s.text}
-              </li>
-            ))}
-          </ul>
-          <div className="help">
-            <span>→ avança</span>
-            <span>← volta</span>
-            <span>F tela cheia</span>
-            <span>T cronômetro</span>
-            <span>N notas</span>
-            <span>B fontes</span>
-            <span>Esc fecha</span>
-            <span>Home reinicia</span>
-          </div>
-        </aside>
+        <Sources open={openSource} onOpen={setOpenSource} notes={notes} />
       ) : null}
     </div>
   )
