@@ -580,6 +580,9 @@
   .afirmacao-grade .claim{grid-column:2;max-width:28ch}
   .afirmacao-grade .mini{grid-column:2;margin-top:var(--e4);padding-top:var(--e3);
     border-top:1px solid rgba(0,0,0,.13);max-width:34ch}
+  /* a folha e o celular são duas tarefas diferentes, e cada uma tem o seu lado:
+     à esquerda o que se escreve no papel, à direita o que se responde no telefone */
+  .afirmacao-grade .mini b{color:var(--ink);font-weight:600}
 
   @media (max-aspect-ratio:4/3){
     /* projetor 4:3 não tem largura para duas colunas: a frase ocupa tudo e o
@@ -617,7 +620,7 @@
     <span class="afirmacao-num" aria-hidden="true">1</span>
     <p class="tag">Afirmação 1</p>
     <p class="claim">Usamos apenas 10% do nosso cérebro.</p>
-    <p class="mini">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp;&nbsp; Confiança ___ / 100</p>
+    <p class="mini">Na folha, uma frase: <b>como eu sei disso?</b></p>
   </div>
 </section>
 
@@ -626,7 +629,7 @@
     <span class="afirmacao-num" aria-hidden="true">2</span>
     <p class="tag">Afirmação 2</p>
     <p class="claim">O aluno aprende mais quando o ensino é adaptado ao estilo de aprendizagem dele — visual, auditivo ou cinestésico.</p>
-    <p class="mini">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp;&nbsp; Confiança ___ / 100</p>
+    <p class="mini">Na folha, uma frase: <b>como eu sei disso?</b></p>
   </div>
 </section>
 
@@ -635,7 +638,7 @@
     <span class="afirmacao-num" aria-hidden="true">3</span>
     <p class="tag">Afirmação 3</p>
     <p class="claim">Sócrates nunca escreveu um livro.</p>
-    <p class="mini">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp;&nbsp; Confiança ___ / 100</p>
+    <p class="mini">Na folha, uma frase: <b>como eu sei disso?</b></p>
   </div>
 </section>
 
