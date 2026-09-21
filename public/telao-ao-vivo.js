@@ -12,24 +12,41 @@
  * operador conta as mãos, como manda o §6.
  */
 (function () {
+  /**
+   * A faixa de participação.
+   *
+   * A versão anterior tinha a hierarquia invertida: o contador de respostas
+   * ocupava 7vmin e a instrução que faz a pessoa agir ("aponte a câmera")
+   * ocupava 1.4vmin. O número grande serve ao operador; a instrução serve à
+   * sala — e é a sala que precisa fazer alguma coisa. Aqui o convite é o
+   * elemento dominante e o contador vira dado discreto.
+   *
+   * A promessa de anonimato fica no telão, não só no celular: ela é o que
+   * derruba a objeção, e precisa estar visível no instante em que a pessoa
+   * decide se pega o telefone — não três telas depois, quando já decidiu não.
+   */
   var css = document.createElement('style')
   css.textContent = [
-    '.ao-vivo{position:absolute;left:7vmin;right:7vmin;bottom:6vmin;display:flex;',
-    'justify-content:space-between;align-items:flex-end;gap:3vmin;pointer-events:none}',
-    '.ao-vivo .qr{display:flex;align-items:flex-end;gap:2vmin}',
-    '.ao-vivo .qr svg{width:15vmin;height:15vmin;display:block;shape-rendering:crispEdges}',
-    '.ao-vivo .url{font-family:"JetBrains Mono",monospace;font-size:clamp(11px,2vmin,24px);',
-    'letter-spacing:.04em;color:var(--ink)}',
-    '.ao-vivo .url b{color:var(--acc)}',
-    '.ao-vivo .url span{display:block;font-size:clamp(9px,1.4vmin,16px);letter-spacing:.14em;',
-    'text-transform:uppercase;color:var(--mut);margin-bottom:.6vmin}',
-    '.ao-vivo .conta{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;',
-    'font-size:clamp(22px,7vmin,92px);line-height:.9;letter-spacing:-.04em;text-align:right;',
-    'font-variant-numeric:tabular-nums}',
-    '.ao-vivo .conta u{display:block;text-decoration:none;font-family:"JetBrains Mono",monospace;',
-    'font-weight:400;font-size:clamp(9px,1.4vmin,16px);letter-spacing:.14em;text-transform:uppercase;',
-    'color:var(--mut);margin-top:.8vmin}',
-    '.ao-vivo.off .conta{color:var(--mut);font-size:clamp(11px,2vmin,22px);font-family:"JetBrains Mono",monospace;font-weight:400}',
+    '.ao-vivo{position:absolute;left:7vmin;right:7vmin;bottom:5.5vmin;display:flex;',
+    'justify-content:space-between;align-items:flex-end;gap:4vmin;pointer-events:none}',
+    '.ao-vivo .qr{display:flex;align-items:center;gap:2.6vmin}',
+    '.ao-vivo .qr svg{width:19vmin;height:19vmin;display:block;shape-rendering:crispEdges;',
+    'border:0.7vmin solid var(--paper);outline:1px solid rgba(16,19,25,.12)}',
+    '.ao-vivo .url{max-width:34ch}',
+    '.ao-vivo .url .chamada{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;',
+    'font-size:clamp(20px,4.2vmin,54px);line-height:1;letter-spacing:-.03em;color:var(--ink);',
+    'display:block;margin-bottom:1vmin}',
+    '.ao-vivo .url .promessa{font-family:"Archivo",sans-serif;font-weight:500;',
+    'font-size:clamp(13px,2.1vmin,26px);color:#5A6070;display:block;line-height:1.35}',
+    '.ao-vivo .url b{display:block;font-family:"JetBrains Mono",monospace;font-weight:400;',
+    'font-size:clamp(11px,1.7vmin,20px);color:var(--acc);margin-top:.9vmin;letter-spacing:.02em}',
+    '.ao-vivo .conta{font-family:"JetBrains Mono",monospace;font-weight:500;',
+    'font-size:clamp(14px,2.6vmin,32px);line-height:1;text-align:right;color:var(--mut);',
+    'font-variant-numeric:tabular-nums;white-space:nowrap}',
+    '.ao-vivo .conta u{display:block;text-decoration:none;font-size:clamp(9px,1.3vmin,15px);',
+    'letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:.6vmin;opacity:.8}',
+    '.ao-vivo.off .qr svg{opacity:.25}',
+    '.ao-vivo.off .conta{color:var(--sig)}',
   ].join('')
   document.head.appendChild(css)
 
@@ -72,15 +89,29 @@
   // os QR são gerados por scripts/gerar-qr.mjs e vêm embutidos, sem baixar imagem
   var qrs = window.QR_VOTAR || {}
 
+  // o convite muda com a atividade: pedir "responda" na tela do Wason não diz
+  // o que fazer, e instrução vaga é fricção
+  var CHAMADAS = {
+    wason: { chamada: 'Mande um trio', promessa: 'três números · quantos quiser' },
+    palavra: { chamada: 'Mande uma palavra', promessa: 'uma só · sem nome, sem cadastro' },
+    depois: { chamada: 'Responda de novo', promessa: 'a mesma afirmação, agora · sem nome' },
+  }
+  var PADRAO = { chamada: 'Responda no seu celular', promessa: 'sem nome, sem cadastro, sem login' }
+
   telas.forEach(function (t) {
     var qr = qrs[t.qr || 'votar']
     var endereco = qr ? qr.url.replace(/^https?:\/\//, '') : enderecoCurto
+    var texto = CHAMADAS[t.qr] || PADRAO
     var faixa = document.createElement('div')
     faixa.className = 'ao-vivo'
     faixa.innerHTML =
       '<div class="qr">' +
       (qr ? qr.svg : '') +
-      '<div class="url"><span>aponte a câmera</span><b>' + endereco + '</b></div>' +
+      '<div class="url">' +
+      '<span class="chamada">' + texto.chamada + '</span>' +
+      '<span class="promessa">' + texto.promessa + '</span>' +
+      '<b>' + endereco + '</b>' +
+      '</div>' +
       '</div>' +
       '<div class="conta" data-conta>—<u>' + (t.conta || 'respostas') + '</u></div>'
     t.sec.appendChild(faixa)
@@ -112,7 +143,12 @@
   function semRede() {
     telas.forEach(function (t) {
       t.faixa.classList.add('off')
-      t.faixa.querySelector('[data-conta]').textContent = 'sem rede — conte as mãos'
+      // linguagem de sala, não de operador: quem lê o telão é a turma
+      var chamada = t.faixa.querySelector('.chamada')
+      var promessa = t.faixa.querySelector('.promessa')
+      if (chamada) chamada.textContent = 'Mão para cima'
+      if (promessa) promessa.textContent = 'sem rede agora — respondemos contando as mãos'
+      t.faixa.querySelector('[data-conta]').innerHTML = 'offline<u>conte as mãos</u>'
     })
   }
 
