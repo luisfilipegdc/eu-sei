@@ -218,12 +218,22 @@
   }
 
   function fim(){
-    $('passo').textContent = 'fim'
+    $('passo').textContent = 'pronto'
+    // quem veio pelo QR de uma afirmação só volta quando a próxima aparecer
+    var parcial = lista.length < AFIRMACOES.length && !rodada
     $('tela').innerHTML =
       '<div class="fim">' +
-      '<p class="mono">pronto</p>' +
-      '<p class="grande">Agora olhe para a frente.</p>' +
-      '<p class="mono">o resultado é da sala, não do seu celular</p>' +
+      '<p class="mono">resposta registrada</p>' +
+      '<p class="grande">' + (parcial ? 'Olhe para a frente.' : 'Agora olhe para a frente.') + '</p>' +
+      '<p class="mono">' +
+      (parcial
+        ? 'escaneie o QR da próxima afirmação quando ela aparecer'
+        : 'o resultado é da sala, não do seu celular') +
+      '</p>' +
+      (parcial
+        ? '<p style="margin-top:22px"><a href="?" style="color:var(--acc);font-size:.9rem">' +
+          'ou responda as três de uma vez</a></p>'
+        : '') +
       '</div>'
   }
 

@@ -15,7 +15,14 @@ const base = (process.argv[2] || 'https://eu-sei-delta.vercel.app').replace(/\/+
 
 /** Um QR por atividade: a câmera leva direto para a tela certa do celular. */
 const alvos = {
+  // um QR por afirmação: quem escaneia na tela da 2 cai na 2, não na 1
+  a1: base + '/v?q=a1',
+  a2: base + '/v?q=a2',
+  a3: base + '/v?q=a3',
+  // o das três de uma vez, para a tela do recap e para quem chegou atrasado
   votar: base + '/v',
+  // a reabertura da afirmação 2 no minuto 16:30, para o termômetro
+  depois: base + '/v?q=a2&rodada=depois',
   wason: base + '/v?wason',
   palavra: base + '/v?palavra',
   referencias: base + '/referencias',

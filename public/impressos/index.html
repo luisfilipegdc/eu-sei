@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Impressos — ficha e cartão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{--ink:#101319;--acc:#2B4FE8;--sig:#C8341F;--mut:#7C8192;--paper:#EFEEEA;--linha:#B9B8B2}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#DAD9D4;color:var(--ink);font-family:"Archivo",system-ui,sans-serif;line-height:1.45}
+
+  /* ---------- barra de controle: some na impressão ---------- */
+  .barra{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--paper);
+    padding:14px 20px;display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center}
+  .barra h1{font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.16em;
+    text-transform:uppercase;font-weight:500;flex:1 1 180px}
+  .barra button{font:inherit;font-size:.82rem;font-weight:600;padding:9px 14px;cursor:pointer;
+    border:2px solid var(--paper);background:transparent;color:var(--paper)}
+  .barra button[aria-pressed="true"]{background:var(--paper);color:var(--ink)}
+  .barra .imprimir{border-color:#8FA4FF;color:#8FA4FF}
+  .barra .dica{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.1em;
+    text-transform:uppercase;opacity:.62;flex-basis:100%;line-height:1.7}
+  .barra .dica b{color:#8FA4FF}
+
+  /* ---------- folha A4 com duas metades A5 ---------- */
+  .folha{background:#fff;width:210mm;height:297mm;margin:22px auto;
+    box-shadow:0 2px 14px rgba(0,0,0,.16);display:flex;flex-direction:column}
+  .meia{height:148.5mm;padding:11mm 14mm;display:flex;flex-direction:column;position:relative}
+  /* a linha do corte, no meio da folha */
+  .meia:first-child{border-bottom:1px dashed var(--linha)}
+  .corte{position:absolute;right:3mm;bottom:1.5mm;font-family:"JetBrains Mono",monospace;
+    font-size:6pt;letter-spacing:.12em;text-transform:uppercase;color:var(--linha)}
+
+  .mono{font-family:"JetBrains Mono",monospace;font-size:8pt;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--mut)}
+
+  /* ---------- a ficha ---------- */
+  .ficha-topo{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    border-bottom:2px solid var(--ink);padding-bottom:3.5mm;margin-bottom:5mm}
+  .ficha-topo h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17pt;
+    letter-spacing:-.035em;line-height:1}
+  .ficha-topo .aviso{text-align:right;line-height:1.6}
+  .ficha-topo .aviso b{color:var(--sig)}
+
+  .item{margin-bottom:4.4mm}
+  .item .cabeca{display:flex;gap:4mm;align-items:baseline;margin-bottom:1.8mm}
+  .item .n{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:11pt;
+    color:var(--acc);line-height:1;min-width:2.6ch}
+  .item .frase{font-weight:600;font-size:9.4pt;line-height:1.25}
+  .item .marcar{display:flex;gap:6mm;align-items:baseline;margin:0 0 2mm 6.6mm;
+    font-family:"JetBrains Mono",monospace;font-size:8pt}
+  .item .pergunta{font-size:8pt;color:var(--mut);margin:0 0 .8mm 6.6mm}
+  .linha{border-bottom:1px solid var(--linha);height:6.4mm;margin-left:6.6mm}
+
+  .rodape-ficha{margin-top:auto;padding-top:3mm;border-top:1px solid var(--linha);
+    display:flex;justify-content:space-between;gap:10px}
+
+  /* verso */
+  .verso-centro{margin-top:5mm}
+  .verso-centro h3{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:13pt;
+    letter-spacing:-.03em;line-height:1.12;margin-bottom:3.5mm;max-width:30ch}
+  .verso-centro .destaque{color:var(--acc)}
+  .verso-centro .linha{margin-left:0}
+
+  /* ---------- os cartões ---------- */
+  .folha-cartoes{padding:13mm 10mm;height:297mm;display:block}
+  .cartoes{display:grid;grid-template-columns:1fr 1fr;gap:0;justify-items:center}
+  .cartao{width:95mm;height:54mm;border:1px dashed var(--linha);padding:5.5mm 6mm;
+    display:flex;flex-direction:column;justify-content:space-between}
+  .cartao .titulo{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:10pt;
+    letter-spacing:-.02em}
+  .cartao ol{margin:0;padding-left:4.4mm;font-size:8.4pt;line-height:1.5}
+  .cartao ol li:last-child{font-weight:700;color:var(--acc)}
+  .cartao .pe{font-family:"JetBrains Mono",monospace;font-size:6pt;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--mut);display:flex;justify-content:space-between;gap:6px}
+
+  /* ---------- o que cada modo mostra ---------- */
+  body[data-ficha="curta"] .so-completa{display:none}
+  body:not([data-ficha="curta"]) .so-curta{display:none}
+
+  @media print{
+    @page{size:A4 portrait;margin:0}
+    body{background:#fff}
+    .barra{display:none}
+    .folha{margin:0;box-shadow:none;page-break-after:always}
+    .folha:last-child{page-break-after:auto}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body data-ficha="curta">
+
+<div class="barra">
+  <h1>Impressos do seminário</h1>
+  <button type="button" id="bcurta" aria-pressed="true">Ficha curta</button>
+  <button type="button" id="bcompleta" aria-pressed="false">Ficha completa</button>
+  <button type="button" class="imprimir" onclick="window.print()">Imprimir</button>
+  <span class="dica">
+    Duas fichas por A4 · corte no meio · <b>frente e verso virando pela borda longa</b>, senão o verso troca de dona<br>
+    12 folhas dão 24 fichas · os cartões são a última folha, 10 por folha · imprima sem margem, escala 100%
+  </span>
+</div>
+
+<!-- ======================= FOLHA 1 — AS DUAS FRENTES ======================= -->
+<div class="folha">
+
+  <div class="meia">
+    <div class="ficha-topo">
+      <h2>COMO EU SEI?</h2>
+      <div class="aviso mono">esta folha é sua<br><b>não escreva seu nome</b></div>
+    </div>
+
+    <div class="item">
+      <div class="cabeca"><span class="n">1</span><span class="frase">Usamos apenas 10% do nosso cérebro.</span></div>
+      <div class="marcar so-completa">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Confiança: ____ / 100</div>
+      <p class="pergunta">Como eu sei disso?</p>
+      <div class="linha"></div>
+    </div>
+
+    <div class="item">
+      <div class="cabeca"><span class="n">2</span><span class="frase">O aluno aprende mais quando o ensino é adaptado ao estilo de aprendizagem dele — visual, auditivo ou cinestésico.</span></div>
+      <div class="marcar so-completa">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Confiança: ____ / 100</div>
+      <p class="pergunta">Como eu sei disso?</p>
+      <div class="linha"></div>
+    </div>
+
+    <div class="item">
+      <div class="cabeca"><span class="n">3</span><span class="frase">Sócrates nunca escreveu um livro.</span></div>
+      <div class="marcar so-completa">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Confiança: ____ / 100</div>
+      <p class="pergunta">Como eu sei disso?</p>
+      <div class="linha"></div>
+    </div>
+
+    <div class="rodape-ficha">
+      <span class="mono so-curta">verdadeiro ou falso vai no celular · aqui só a razão</span>
+      <span class="mono so-completa">não é prova · não vale nota</span>
+      <span class="mono">vire no fim &rarr;</span>
+    </div>
+    <span class="corte">corte aqui</span>
+  </div>
+
+  <div class="meia">
+    <div class="ficha-topo">
+      <h2>COMO EU SEI?</h2>
+      <div class="aviso mono">esta folha é sua<br><b>não escreva seu nome</b></div>
+    </div>
+
+    <div class="item">
+      <div class="cabeca"><span class="n">1</span><span class="frase">Usamos apenas 10% do nosso cérebro.</span></div>
+      <div class="marcar so-completa">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Confiança: ____ / 100</div>
+      <p class="pergunta">Como eu sei disso?</p>
+      <div class="linha"></div>
+    </div>
+
+    <div class="item">
+      <div class="cabeca"><span class="n">2</span><span class="frase">O aluno aprende mais quando o ensino é adaptado ao estilo de aprendizagem dele — visual, auditivo ou cinestésico.</span></div>
+      <div class="marcar so-completa">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Confiança: ____ / 100</div>
+      <p class="pergunta">Como eu sei disso?</p>
+      <div class="linha"></div>
+    </div>
+
+    <div class="item">
+      <div class="cabeca"><span class="n">3</span><span class="frase">Sócrates nunca escreveu um livro.</span></div>
+      <div class="marcar so-completa">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Confiança: ____ / 100</div>
+      <p class="pergunta">Como eu sei disso?</p>
+      <div class="linha"></div>
+    </div>
+
+    <div class="rodape-ficha">
+      <span class="mono so-curta">verdadeiro ou falso vai no celular · aqui só a razão</span>
+      <span class="mono so-completa">não é prova · não vale nota</span>
+      <span class="mono">vire no fim &rarr;</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======================= FOLHA 2 — OS DOIS VERSOS ======================= -->
+<!-- topo continua topo: virando pela borda longa, o verso de cima é da ficha de cima -->
+<div class="folha">
+
+  <div class="meia">
+    <div class="ficha-topo">
+      <h2>AGORA</h2>
+      <div class="aviso mono">dezoito minutos depois</div>
+    </div>
+    <div class="verso-centro">
+      <p class="mono" style="margin-bottom:2mm">Afirmação 2 — a dos estilos de aprendizagem</p>
+      <div class="marcar" style="margin-left:0;margin-bottom:5mm">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Minha confiança agora: ____ / 100</div>
+      <h3>O que me faria <span class="destaque">mudar de ideia</span>?</h3>
+      <div class="linha"></div>
+      <div class="linha"></div>
+    </div>
+    <div class="rodape-ficha">
+      <span class="mono">se a resposta for "nada", aquilo não é conhecimento — é identidade</span>
+      <span class="mono">a folha fica com você</span>
+    </div>
+    <span class="corte">corte aqui</span>
+  </div>
+
+  <div class="meia">
+    <div class="ficha-topo">
+      <h2>AGORA</h2>
+      <div class="aviso mono">dezoito minutos depois</div>
+    </div>
+    <div class="verso-centro">
+      <p class="mono" style="margin-bottom:2mm">Afirmação 2 — a dos estilos de aprendizagem</p>
+      <div class="marcar" style="margin-left:0;margin-bottom:5mm">( ) Verdadeiro &nbsp;&nbsp; ( ) Falso &nbsp;&nbsp; Minha confiança agora: ____ / 100</div>
+      <h3>O que me faria <span class="destaque">mudar de ideia</span>?</h3>
+      <div class="linha"></div>
+      <div class="linha"></div>
+    </div>
+    <div class="rodape-ficha">
+      <span class="mono">se a resposta for "nada", aquilo não é conhecimento — é identidade</span>
+      <span class="mono">a folha fica com você</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======================= FOLHA 3 — OS CARTÕES ======================= -->
+<div class="folha folha-cartoes">
+  <p class="mono" style="margin-bottom:4mm">Cartões — corte nas linhas · 10 por folha · duas folhas dão 20</p>
+  <div class="cartoes" id="grade"></div>
+</div>
+
+<script>
+  // um molde só, repetido: mexer no texto aqui muda os dez cartões
+  var cartao =
+    '<div class="cartao">' +
+      '<div class="titulo">Antes de acreditar, pergunte:</div>' +
+      '<ol>' +
+        '<li>Como você sabe?</li>' +
+        '<li>Quem te contou?</li>' +
+        '<li>Que evidência você tem?</li>' +
+        '<li>E se você estiver errado?</li>' +
+        '<li>O que me faria mudar de ideia?</li>' +
+      '</ol>' +
+      '<div class="pe"><span>Como você sabe?</span><span>eu-sei-delta.vercel.app/referencias</span></div>' +
+    '</div>'
+  document.getElementById('grade').innerHTML = cartao.repeat(10)
+
+  var b1 = document.getElementById('bcurta')
+  var b2 = document.getElementById('bcompleta')
+  function modo(qual){
+    document.body.dataset.ficha = qual
+    b1.setAttribute('aria-pressed', String(qual === 'curta'))
+    b2.setAttribute('aria-pressed', String(qual !== 'curta'))
+  }
+  b1.addEventListener('click', function(){ modo('curta') })
+  b2.addEventListener('click', function(){ modo('completa') })
+</script>
+
+</body>
+</html>

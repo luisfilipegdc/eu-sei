@@ -46,10 +46,11 @@
     return null
   }
 
+  // cada afirmação tem o seu QR: escanear na tela da 2 abre a 2 no celular
   var telas = [
-    { sec: secaoPorTag('afirmação 1'), q: 'a1' },
-    { sec: secaoPorTag('afirmação 2'), q: 'a2' },
-    { sec: secaoPorTag('afirmação 3'), q: 'a3' },
+    { sec: secaoPorTag('afirmação 1'), q: 'a1', qr: 'a1' },
+    { sec: secaoPorTag('afirmação 2'), q: 'a2', qr: 'a2' },
+    { sec: secaoPorTag('afirmação 3'), q: 'a3', qr: 'a3' },
   ].filter(function (t) {
     return t.sec
   })
@@ -63,6 +64,10 @@
   var secNuvem = document.getElementById('nuvem')
   if (secWason) telas.push({ sec: secWason, q: null, qr: 'wason', conta: 'trios' })
   if (secNuvem) telas.push({ sec: secNuvem, q: null, qr: 'palavra', conta: 'palavras' })
+
+  // 16:30 — reabre a afirmação 2 pelo celular, em vez de contar mãos
+  var secTermo = document.getElementById('termo')
+  if (secTermo) telas.push({ sec: secTermo, q: 'a2_depois', qr: 'depois', conta: 'agora' })
 
   // os QR são gerados por scripts/gerar-qr.mjs e vêm embutidos, sem baixar imagem
   var qrs = window.QR_VOTAR || {}
