@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>O mapa — o seminário explicado simples</title>
+<meta name="description" content="O seminário COMO VOCÊ SABE? explicado em palavras simples, para qualquer pessoa do grupo conseguir explicar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Archivo:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#EFEEEA;--ink:#101319;--acc:#2B4FE8;--sig:#C8341F;--mut:#6B7182;
+    --linha:#D6D5CF;--caixa:#F7F6F3;--ink2:#474D5E;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"Archivo",system-ui,sans-serif;
+    font-size:clamp(1rem,.95rem+.3vw,1.16rem);line-height:1.58;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:74ch;margin:0 auto;padding:0 20px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--mut)}
+
+  header{padding:clamp(38px,8vw,80px) 0 clamp(24px,4vw,40px)}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.045em;
+    line-height:.95;font-size:clamp(2.3rem,8vw,4.2rem);margin:12px 0 0;text-wrap:balance}
+  .lede{margin-top:20px;font-size:clamp(1.08rem,1.1rem+.4vw,1.4rem);max-width:44ch;font-weight:500}
+
+  /* a ideia grande, em três caixas */
+  .tres{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:26px 0}
+  .tres div{border:2px solid var(--ink);padding:16px 18px;background:var(--caixa)}
+  .tres b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:1.24rem;letter-spacing:-.02em;margin-bottom:6px}
+  .tres .fala{font-style:italic;color:var(--acc);font-weight:500}
+  .tres small{display:block;margin-top:8px;font-size:.88rem;color:var(--ink2);line-height:1.45}
+  .tres div:last-child{border-color:var(--sig)}
+  .tres div:last-child b{color:var(--sig)}
+
+  /* o mapa dos minutos */
+  section.bloco{border-top:1px solid var(--linha);padding:clamp(24px,4vw,40px) 0}
+  .cabeca{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+  .minuto{font-family:"JetBrains Mono",monospace;font-weight:500;font-size:.88rem;color:var(--acc);
+    border:1.5px solid var(--acc);padding:3px 9px;white-space:nowrap}
+  h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.03em;
+    line-height:1.04;font-size:clamp(1.5rem,4.2vw,2.2rem);text-wrap:balance;flex:1 1 240px}
+
+  .oque{font-size:1.06rem;margin-bottom:14px}
+  .porque{border-left:3px solid var(--sig);padding:2px 0 2px 16px;margin:14px 0;color:var(--ink2)}
+  .porque b{color:var(--ink)}
+  .crianca{background:var(--ink);color:var(--paper);padding:16px 18px;margin-top:16px}
+  .crianca .mono{color:#8FA4FF;display:block;margin-bottom:7px}
+  .crianca p{font-size:1.1rem;line-height:1.5}
+
+  /* dicionário */
+  dl.dic{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;align-items:baseline;margin-top:18px}
+  dl.dic dt{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.05rem;
+    letter-spacing:-.02em;white-space:nowrap}
+  dl.dic dd{color:var(--ink2)}
+  dl.dic dd b{color:var(--ink);font-weight:600}
+  @media (max-width:560px){ dl.dic{grid-template-columns:1fr;gap:2px 0} dl.dic dd{margin-bottom:12px} }
+
+  ul.lista{list-style:none;margin-top:14px}
+  ul.lista li{padding-left:22px;position:relative;margin-bottom:10px}
+  ul.lista li::before{content:"";position:absolute;left:0;top:.62em;width:10px;height:2px;background:var(--sig)}
+
+  footer{border-top:1px solid var(--linha);margin-top:20px;padding:34px 0 70px;color:var(--mut);font-size:.92rem}
+
+  @media print{
+    @page{size:A4;margin:14mm 12mm}
+    body{background:#fff;font-size:10pt}
+    .wrap{max-width:none;padding:0}
+    section.bloco{break-inside:avoid;padding:9pt 0}
+    .crianca{background:#fff;color:#000;border:1.5pt solid #000}
+    .crianca .mono{color:#000}
+    h1{font-size:24pt}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <p class="mono">Para o grupo · Luis, Carlos, Malu, Renata, Rebeca, Mariana, Dalila</p>
+  <h1>O mapa</h1>
+  <p class="lede">O seminário inteiro explicado em palavras simples. Se você entender esta
+  página, você consegue explicar o seminário para qualquer pessoa — inclusive para quem
+  nunca ouviu a palavra "epistemologia".</p>
+</div></header>
+
+<main>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><h2>A ideia grande, em uma frase</h2></div>
+  <p class="oque">Tem diferença entre <b>achar</b> uma coisa e <b>saber</b> uma coisa. Quase
+  ninguém para para pensar nisso. O seminário faz a turma perceber a diferença sentindo ela,
+  antes de dar o nome.</p>
+
+  <div class="tres">
+    <div>
+      <b>Acreditar</b>
+      <span class="fala">"eu acho que sim"</span>
+      <small>Você tem a coisa na cabeça. Só isso.</small>
+    </div>
+    <div>
+      <b>Ser verdade</b>
+      <span class="fala">"e é mesmo assim"</span>
+      <small>A coisa é do jeito que você acha. Pode ser sorte.</small>
+    </div>
+    <div>
+      <b>Saber por quê</b>
+      <span class="fala">"e eu sei explicar"</span>
+      <small>Essa é a que falta quase sempre. E é a única que você precisa mostrar
+      para alguém.</small>
+    </div>
+  </div>
+
+  <div class="crianca">
+    <span class="mono">Se alguém perguntar do que é o trabalho</span>
+    <p>"A gente mostra que dá para acertar sem saber. E que saber de verdade é quando você
+    consegue explicar por quê."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><span class="minuto">0 → 3 min</span><h2>A gente pergunta, eles respondem, e a gente não conta nada</h2></div>
+  <p class="oque">A turma recebe uma folha na porta. O telão mostra três frases, uma de cada
+  vez. Para cada uma eles respondem no celular se acham verdadeiro ou falso, e escrevem na
+  folha <b>uma frase</b>: como eu sei disso?</p>
+  <div class="porque"><b>Por que a gente não mostra o resultado:</b> se eles vissem agora quem
+  acertou, acabava a graça. Tudo o que vem depois depende de ninguém saber ainda.</div>
+  <div class="crianca">
+    <span class="mono">Em palavras simples</span>
+    <p>"A gente faz três perguntas e não conta a resposta. Igual quando você esconde uma coisa
+    atrás das costas e pergunta em qual mão está."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><span class="minuto">3 → 6 min</span><h2>Todo mundo de pé, numa linha</h2></div>
+  <p class="oque">Uma parede é VERDADEIRO, a outra é FALSO, o meio é "não faço ideia". Cada um
+  fica no ponto onde acredita. <b>Não são dois times</b> — é uma linha, dá para ficar no meio.
+  O apresentador entra na linha também.</p>
+  <p class="oque">Depois ele vai até três pessoas em lugares diferentes e pergunta:
+  <i>"por que você está aí?"</i> E não corrige ninguém. Só pergunta de onde veio aquilo.</p>
+  <div class="porque"><b>Por que linha e não dois times:</b> em time a pessoa defende o lado.
+  Na linha ela só dá um passo quando muda de ideia — e dar um passo é fácil, trocar de time
+  na frente de todo mundo é vergonhoso.</div>
+  <div class="crianca">
+    <span class="mono">Em palavras simples</span>
+    <p>"Todo mundo fica em pé numa fila, do lado que acredita. E a gente pergunta por quê —
+    sem dizer que está errado."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><span class="minuto">6 → 8 min</span><h2>Trocar a folha com quem pensa o contrário</h2></div>
+  <p class="oque">Cada um escolhe alguém do lado oposto da sala, atravessa e <b>troca a
+  folha</b>. Lê a frase que a outra pessoa escreveu. Aí vem a pergunta:
+  <i>"a razão dela é pior que a sua?"</i></p>
+  <p class="oque">E quase sempre a razão é <b>do mesmo tipo</b>: "minha professora ensinou",
+  "eu vejo na prática". Duas pessoas, o mesmo tipo de razão, respostas opostas.</p>
+  <div class="porque"><b>É aqui que a ficha cai:</b> se a mesma razão serve para os dois
+  lados, então a razão não resolveu nada. Ninguém explica isso em voz alta — a turma sente
+  sozinha, em três segundos de silêncio.</div>
+  <div class="crianca">
+    <span class="mono">Em palavras simples</span>
+    <p>"Você lê o motivo de alguém que respondeu o contrário de você. E descobre que o motivo
+    dele é igualzinho ao seu."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><span class="minuto">8 → 9 min</span><h2>O jogo dos números</h2></div>
+  <p class="oque">O telão mostra <b>2 · 4 · 6</b> e diz: "esses três seguem uma regra que eu
+  tenho na cabeça. Mandem outros três pelo celular, eu respondo só sim ou não."</p>
+  <p class="oque">Quase todo mundo manda 8-10-12, depois 20-22-24 — números que <b>já iam dar
+  sim</b>. Quase ninguém tenta 1-2-3 ou 9-4-2, que são os que poderiam dar não. A regra de
+  verdade era simples: qualquer três números em ordem crescente.</p>
+  <div class="porque"><b>O que isso mostra:</b> a gente testa o que confirma o que já acha, e
+  não o que poderia derrubar. Isso tem nome: viés de confirmação.</div>
+  <div class="crianca">
+    <span class="mono">Em palavras simples</span>
+    <p>"A gente só faz as perguntas que já sabe que vão dar a resposta que a gente quer."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><span class="minuto">9 min</span><h2>A virada — a tela fica preta</h2></div>
+  <p class="oque">A turma ainda está de pé. O telão escurece pela única vez no seminário
+  inteiro, e aparecem, uma por uma, as cinco perguntas que eles acabaram de responder sem
+  perceber: <i>como você sabe? quem te contou? que evidência você tem? e se você estiver
+  errado? isso basta?</i></p>
+  <p class="oque">Aí vem: <b>"vocês passaram nove minutos fazendo isto. Isto tem um nome.
+  Vocês acabaram de fazer epistemologia."</b></p>
+  <div class="porque"><b>Por que só agora:</b> se a palavra viesse no começo, seria mais uma
+  matéria para decorar. Vindo aqui, ela dá nome a uma coisa que eles já sentiram no corpo.</div>
+  <div class="crianca">
+    <span class="mono">Em palavras simples</span>
+    <p>"A gente deixa eles fazerem a coisa primeiro. Só no fim conta que aquilo tem um nome
+    difícil."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><span class="minuto">9 → 16 min</span><h2>Agora sim, a explicação</h2></div>
+  <p class="oque">Cada um manda <b>uma palavra</b> pelo celular: de onde veio o que você sabe?
+  As palavras aparecem no telão e as repetidas crescem. Isso vira, na hora, uma lista de
+  fontes de conhecimento feita por eles.</p>
+  <p class="oque">Depois vem a explicação: o que é epistemologia, as três peças (acreditar,
+  ser verdade, saber por quê), e a pegadinha da terceira frase — <b>"Sócrates nunca escreveu
+  um livro" é verdadeiro, quase todos acertaram, e quase ninguém sabe dizer por quê.</b>
+  Acertaram. Mas sabiam?</p>
+  <p class="oque">E por último: por que um professor precisa pensar nisso. Porque quando você
+  entra numa sala de aula, você já decidiu o que conta como saber — sabendo ou sem saber.</p>
+  <div class="crianca">
+    <span class="mono">Em palavras simples</span>
+    <p>"Eles acertaram a pergunta do Sócrates no chute. A gente mostra que acertar no chute
+    não é saber."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><span class="minuto">16 → 18:30</span><h2>O fim, e o presente</h2></div>
+  <p class="oque">A turma responde de novo a mesma frase do começo, pelo celular. O telão
+  compara sozinho e mostra: <b>quantas pessoas mudaram de ideia em dezoito minutos.</b></p>
+  <p class="oque">Aí vem a parte que não pode faltar: <i>"'a Terra é redonda' e 'usamos 10% do
+  cérebro' não estão empatadas"</i>. Uma tem muito mais coisa segurando do que a outra.</p>
+  <p class="oque">No fim cada um ganha um cartãozinho com as cinco perguntas, para levar embora.</p>
+  <div class="porque"><b>Por que isso é obrigatório:</b> sem essa parte, a turma sai achando
+  que não dá para saber nada. E aí o seminário teria feito o contrário do que queria.</div>
+  <div class="crianca">
+    <span class="mono">Em palavras simples</span>
+    <p>"Duvidar não é achar que tudo é mentira. É querer saber por quê."</p>
+  </div>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><h2>As palavras difíceis, traduzidas</h2></div>
+  <dl class="dic">
+    <dt>Epistemologia</dt><dd>A parte da filosofia que pergunta <b>como a gente sabe o que sabe</b>. Não é sobre o que você sabe — é sobre o que faz uma coisa valer como saber.</dd>
+    <dt>Ontologia</dt><dd>A parte que pergunta <b>o que as coisas são</b>. A aula do professor fala das duas; o nosso seminário faz só a primeira.</dd>
+    <dt>Justificação</dt><dd><b>Conseguir explicar por quê.</b> É a peça que quase sempre falta.</dd>
+    <dt>Maiêutica</dt><dd>O jeito do Sócrates: <b>perguntar em vez de explicar</b>, até a pessoa descobrir sozinha. Ele dizia que era parteira de ideias.</dd>
+    <dt>Dóxa e epistḗmē</dt><dd>Em grego: <b>opinião</b> e <b>conhecimento</b>. É a linha que a turma atravessa com o corpo.</dd>
+    <dt>Viés de confirmação</dt><dd><b>Só procurar o que dá razão para a gente.</b> É o jogo do 2·4·6.</dd>
+    <dt>Hipótese de correspondência</dt><dd>A ideia de que <b>ensinar do jeito preferido do aluno faz ele aprender mais</b>. É essa ideia que os estudos não conseguiram sustentar — não a de que preferências existem.</dd>
+  </dl>
+</div></section>
+
+<section class="bloco"><div class="wrap">
+  <div class="cabeca"><h2>Se alguém do grupo só puder decorar cinco coisas</h2></div>
+  <ul class="lista">
+    <li><b>Não diga o tema no começo.</b> A surpresa do minuto nove é o seminário inteiro.</li>
+    <li><b>Não mostre o resultado da votação cedo.</b> Ele só aparece no fim.</li>
+    <li><b>Não corrija ninguém na linha.</b> Só pergunte de onde veio.</li>
+    <li><b>Não diga que está provado que é falso.</b> Diga que a crença é mais espalhada do que a evidência. As duas frases são diferentes, e a diferença é a aula.</li>
+    <li><b>Nunca termine em "cada um tem sua verdade".</b> Termine em "dá para saber, mas precisa saber por quê".</li>
+  </ul>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <p>Seminário “Como você sabe?” · 18 minutos e 30 · turma de Pedagogia</p>
+  <p style="margin-top:8px"><a href="/" style="color:var(--acc)">Ver a apresentação</a> ·
+  <a href="/cola" style="color:var(--acc)">cola de palco</a> ·
+  <a href="/referencias" style="color:var(--acc)">as fontes</a></p>
+</div></footer>
+
+</body>
+</html>
