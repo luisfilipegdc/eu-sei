@@ -381,9 +381,17 @@
     var total = dados.reduce(function (s, d) {
       return s + d.v + d.f
     }, 0)
-    var aviso = document.getElementById('placar-sem')
-    if (aviso) aviso.style.display = total ? 'none' : ''
-    if (!total) return
+    var semNada = document.getElementById('placar-sem')
+    if (semNada) semNada.style.display = total ? 'none' : ''
+    if (!total) {
+      // zerou (ou ainda não chegou nada): as barras antigas têm que sair junto
+      ;[grade, gradeRecap].forEach(function (el) {
+        if (!el) return
+        el.innerHTML = ''
+        delete el.dataset.assinatura
+      })
+      return
+    }
 
     var assinatura = dados
       .map(function (d) {
@@ -475,6 +483,147 @@
     }
   })()
 
+  /* ---------- zerar a sala (tecla Z) ---------- */
+
+  /**
+   * Zerar sem apagar.
+   *
+   * O §2.1 fixa que a RLS permite insert e select e nunca delete — então não
+   * existe "apagar os votos" pelo navegador, e é bom que não exista: apagar
+   * resposta de gente no meio de um seminário é irreversível e ninguém quer
+   * descobrir na herrada que apertou a tecla sem querer.
+   *
+   * Em vez disso, guardamos um instante de corte: tudo o que chegou antes
+   * dele deixa de ser contado. A tela zera na hora, o banco fica intacto, e a
+   * tecla U traz tudo de volta enquanto a marca ainda estiver na memória.
+   */
+  var CHAVE_CORTE = 'eusei:corte:' + ((window.SALA && window.SALA.sala) || 'seminario')
+  var corte = null
+  try {
+    corte = localStorage.getItem(CHAVE_CORTE)
+  } catch (e) {
+    corte = null
+  }
+
+  function guardaCorte(valor) {
+    corte = valor
+    try {
+      if (valor) localStorage.setItem(CHAVE_CORTE, valor)
+      else localStorage.removeItem(CHAVE_CORTE)
+    } catch (e) {
+      /* navegador sem storage: o corte vale só nesta sessão, e tudo bem */
+    }
+  }
+
+  function depoisDoCorte(linhas) {
+    if (!corte) return linhas
+    return linhas.filter(function (l) {
+      return l.criado_em > corte
+    })
+  }
+
+  /** força o redesenho de tudo, inclusive do que só muda por assinatura */
+  function redesenha() {
+    if (grade) delete grade.dataset.assinatura
+    if (gradeRecap) delete gradeRecap.dataset.assinatura
+    if (wlista) wlista.innerHTML = ''
+    if (cloud) cloud.innerHTML = ''
+    ;['n1', 'n2', 'nt'].forEach(function (id) {
+      var el = document.getElementById(id)
+      if (!el) return
+      el.value = ''
+      delete el.dataset.manual
+    })
+    var d = document.getElementById('tdelta')
+    if (d) d.innerHTML = '&nbsp;'
+    ;['v1', 'v2'].forEach(function (id) {
+      var el = document.getElementById(id)
+      if (el) el.textContent = '—'
+    })
+    ;['f1', 'f2'].forEach(function (id) {
+      var el = document.getElementById(id)
+      if (el) el.style.width = '0%'
+    })
+    telas.forEach(function (t) {
+      t.faixa.querySelector('[data-conta]').innerHTML = '0<u>' + (t.conta || 'respostas') + '</u>'
+    })
+  }
+
+  var aviso = document.createElement('div')
+  aviso.id = 'zerar-aviso'
+  aviso.hidden = true
+  document.body.appendChild(aviso)
+  var estiloAviso = document.createElement('style')
+  estiloAviso.textContent = [
+    '#zerar-aviso{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:60;',
+    'background:var(--ink);color:var(--paper);padding:3vmin 4vmin;max-width:44ch;',
+    'font-family:"Archivo",sans-serif;font-size:clamp(14px,2.4vmin,28px);line-height:1.4;',
+    'box-shadow:0 1vmin 4vmin rgba(0,0,0,.3)}',
+    '#zerar-aviso[hidden]{display:none}',
+    '#zerar-aviso b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;',
+    'font-size:clamp(20px,4vmin,48px);letter-spacing:-.03em;margin-bottom:1.4vmin;line-height:1}',
+    '#zerar-aviso kbd{font-family:"JetBrains Mono",monospace;background:#8FA4FF;color:var(--ink);',
+    'padding:.1em .45em;font-size:.9em}',
+    '#zerar-aviso small{display:block;margin-top:1.6vmin;color:#9AA1B4;font-size:.78em}',
+  ].join('')
+  document.head.appendChild(estiloAviso)
+
+  var esperandoConfirmacao = false
+  var sumir = null
+
+  function mostra(html, ms) {
+    aviso.innerHTML = html
+    aviso.hidden = false
+    if (sumir) clearTimeout(sumir)
+    if (ms) sumir = setTimeout(function () { aviso.hidden = true }, ms)
+  }
+
+  function digitando() {
+    var el = document.activeElement
+    return !!el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)
+  }
+
+  document.addEventListener(
+    'keydown',
+    function (e) {
+      if (digitando()) return
+
+      if (e.key === 'z' || e.key === 'Z') {
+        e.stopImmediatePropagation()
+        if (!esperandoConfirmacao) {
+          esperandoConfirmacao = true
+          mostra(
+            '<b>Zerar a sala?</b>Some tudo o que já foi respondido — votos, trios e palavras.' +
+              '<kbd>Z</kbd> de novo confirma · <kbd>Esc</kbd> cancela' +
+              '<small>Nada é apagado do banco: fica guardado e a tecla U traz de volta.</small>',
+          )
+          return
+        }
+        esperandoConfirmacao = false
+        guardaCorte(new Date().toISOString())
+        redesenha()
+        mostra('<b>Zerado.</b>A sala está limpa. <kbd>U</kbd> desfaz.', 4000)
+        return
+      }
+
+      if (e.key === 'u' || e.key === 'U') {
+        if (!corte) return
+        e.stopImmediatePropagation()
+        guardaCorte(null)
+        redesenha()
+        mostra('<b>Desfeito.</b>As respostas anteriores voltaram.', 3000)
+        return
+      }
+
+      if (e.key === 'Escape' && (esperandoConfirmacao || !aviso.hidden)) {
+        e.stopImmediatePropagation()
+        esperandoConfirmacao = false
+        aviso.hidden = true
+      }
+    },
+    true,
+  )
+
   /* ---------- liga ---------- */
 
   if (!window.SALA || window.SALA.modo === 'offline') {
@@ -488,7 +637,7 @@
     null,
     function (linhas) {
       if (linhas === null) return semRede()
-      atualiza(linhas)
+      atualiza(depoisDoCorte(linhas))
     },
     2000,
   )
