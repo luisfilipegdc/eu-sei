@@ -106,6 +106,7 @@
     termometro(linhas)
     nuvem(linhas)
     wason(linhas)
+    placar(linhas)
   }
 
   function semRede() {
@@ -265,6 +266,109 @@
     var r = document.getElementById('wref')
     if (c) c.textContent = confirmam
     if (r) r.textContent = trios.length - confirmam
+  }
+
+  /* ---------- o gráfico comparativo das três afirmações ---------- */
+
+  var AFIRMACOES = [
+    { q: 'a1', frase: 'Usamos apenas 10% do nosso cérebro.' },
+    { q: 'a2', frase: 'O aluno aprende mais quando o ensino é adaptado ao estilo dele.' },
+    { q: 'a3', frase: 'Sócrates nunca escreveu um livro.' },
+  ]
+
+  var grade = document.getElementById('placar-grade')
+
+  /**
+   * Barra empilhada por afirmação: verdadeiro contra falso, contagem direta na
+   * barra. Duas séries só, com legenda e rótulo em cada segmento, então a cor
+   * nunca é a única coisa que diz o que é o quê.
+   *
+   * Esta tela vem DEPOIS do termômetro de propósito. O §6 é explícito: durante
+   * a votação o telão não mostra resultado. Aqui já passou a linha, a troca, a
+   * revelação e o termômetro — agora o número é fecho, não spoiler.
+   */
+  function placar(linhas) {
+    if (!grade) return
+    var dados = AFIRMACOES.map(function (a) {
+      var votos = linhas.filter(function (l) {
+        return l.tipo === 'voto' && l.pergunta === a.q
+      })
+      return {
+        frase: a.frase,
+        v: votos.filter(function (l) {
+          return l.opcao === 'V'
+        }).length,
+        f: votos.filter(function (l) {
+          return l.opcao === 'F'
+        }).length,
+      }
+    })
+
+    var total = dados.reduce(function (s, d) {
+      return s + d.v + d.f
+    }, 0)
+    var aviso = document.getElementById('placar-sem')
+    if (aviso) aviso.style.display = total ? 'none' : ''
+    if (!total) return
+
+    var assinatura = dados
+      .map(function (d) {
+        return d.v + '/' + d.f
+      })
+      .join('|')
+    if (grade.dataset.assinatura === assinatura) return
+    grade.dataset.assinatura = assinatura
+
+    grade.innerHTML = ''
+    dados.forEach(function (d, i) {
+      var n = d.v + d.f
+      var pv = n ? (d.v / n) * 100 : 0
+      var linha = document.createElement('div')
+      linha.className = 'placar-linha'
+      linha.dataset.i = String(i)
+      linha.innerHTML =
+        '<div class="placar-cab">' +
+        '<span class="frase">' + d.frase + '</span>' +
+        '<span class="n">' + n + (n === 1 ? ' resposta' : ' respostas') + '</span>' +
+        '</div>' +
+        '<div class="barra-empilhada">' +
+        '<i class="v' + (d.v ? '' : ' vazio') + '" style="width:' + pv + '%">' +
+        (d.v ? d.v : '') + '</i>' +
+        '<i class="f' + (d.f ? '' : ' vazio') + '" style="width:' + (100 - pv) + '%">' +
+        (d.f ? d.f : '') + '</i>' +
+        '</div>'
+      grade.appendChild(linha)
+    })
+    revelaPlacar()
+  }
+
+  // uma afirmação por avanço, como o resto do deck
+  var secPlacar = document.getElementById('placar')
+  var passos = document.getElementById('placar-passos')
+
+  function revelaPlacar() {
+    if (!grade || !secPlacar) return
+    var acesos = passos ? passos.querySelectorAll('.step.in').length : 0
+    var visiveis = secPlacar.classList.contains('on') ? acesos + 1 : 0
+    ;[].forEach.call(grade.children, function (el, i) {
+      el.classList.toggle('in', i < visiveis)
+    })
+  }
+
+  // o motor do deck não avisa quando muda de passo, mas mexe na classe dos
+  // marcadores e da própria tela — observar os dois basta
+  if (secPlacar) {
+    new MutationObserver(revelaPlacar).observe(secPlacar, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+  }
+  if (passos) {
+    new MutationObserver(revelaPlacar).observe(passos, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: true,
+    })
   }
 
   /* ---------- tela 34: o QR das referências ---------- */

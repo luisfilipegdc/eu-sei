@@ -507,6 +507,29 @@
   .opbar.nums{margin-top:4vmin;opacity:.45;transition:opacity .2s}
   .opbar.nums:hover,.opbar.nums:focus-within{opacity:1}
   .opbar.nums input{width:9ch;text-align:center;padding:.9vmin 1vmin}
+  /* gráfico comparativo das três afirmações — só aparece depois do termômetro,
+     porque no minuto 2 mostrar resultado mataria a linha e a troca de fichas */
+  .placar{display:flex;flex-direction:column;gap:3.4vmin;width:100%}
+  .placar-linha{opacity:0;transition:opacity .34s ease}
+  .placar-linha.in{opacity:1}
+  .placar-cab{display:flex;align-items:baseline;justify-content:space-between;gap:2vmin;margin-bottom:1.2vmin}
+  .placar-cab .frase{font-weight:600;font-size:clamp(12px,2.4vmin,30px);line-height:1.22;max-width:42ch}
+  .placar-cab .n{font-family:"JetBrains Mono",monospace;font-size:clamp(9px,1.4vmin,16px);
+    letter-spacing:.12em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+  /* barra empilhada: 2px de respiro entre os dois segmentos, pontas arredondadas */
+  .barra-empilhada{display:flex;gap:2px;height:5.4vmin;width:100%}
+  .barra-empilhada i{display:block;height:100%;min-width:0;transition:width .7s cubic-bezier(.4,0,.2,1);
+    display:flex;align-items:center;font-family:"JetBrains Mono",monospace;font-weight:500;
+    font-size:clamp(10px,1.9vmin,22px);color:#fff;padding:0 1.2vmin}
+  .barra-empilhada .v{background:var(--acc);border-radius:3px 0 0 3px}
+  .barra-empilhada .f{background:var(--sig);border-radius:0 3px 3px 0;justify-content:flex-end}
+  .barra-empilhada i.vazio{padding:0}
+  .placar-legenda{display:flex;gap:3vmin;align-items:center;font-family:"JetBrains Mono",monospace;
+    font-size:clamp(9px,1.4vmin,16px);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+  .placar-legenda span{display:flex;align-items:center;gap:1vmin}
+  .placar-legenda b{width:1.6vmin;height:1.6vmin;display:block;border-radius:2px}
+  .placar-legenda .cv{background:var(--acc)} .placar-legenda .cf{background:var(--sig)}
+
   /* hierarquia das afirmações: numeral âncora à esquerda, frase dominando,
      linha da ficha recuada. Três pesos bem diferentes, não três parágrafos. */
   .afirmacao-grade{display:grid;grid-template-columns:auto 1fr;gap:0 4vmin;align-items:start;width:100%}
@@ -781,6 +804,21 @@
       <p class="tdelta step" id="tdelta">&nbsp;</p>
     </div>
     <div class="opbar nums"><input id="n1" type="number" min="0" max="60" placeholder="antes" aria-label="Contagem no início"><input id="n2" type="number" min="0" max="60" placeholder="agora" aria-label="Contagem agora"><input id="nt" type="number" min="1" max="60" placeholder="total" aria-label="Total de pessoas"><span class="hint">entrada manual · se a rede cair</span></div>
+  </div>
+</section>
+
+<section class="s" id="placar" data-steps="3" data-note="O que a sala respondeu, as três de uma vez — e SÓ AQUI, nunca no minuto 2: se eles vissem isso antes, a linha e a troca de fichas não teriam acontecido. Uma afirmação por avanço. Não comente número, deixe eles lerem. A afirmação 1 é a ponte para a próxima tela: muita gente marcou verdadeiro numa coisa que não tem nenhuma evidência, e isso não é burrice — é como a crença se espalha.">
+  <div class="c wide">
+    <p class="tag">O que esta sala respondeu</p>
+    <!-- marcadores invisíveis: o motor do deck liga um por avanço, e o gráfico
+         revela uma afirmação para cada um que acender -->
+    <span id="placar-passos" hidden><i class="step"></i><i class="step"></i></span>
+    <div class="placar" id="placar-grade" role="img" aria-label="Respostas das três afirmações, verdadeiro contra falso"></div>
+    <div class="placar-legenda">
+      <span><b class="cv"></b>verdadeiro</span>
+      <span><b class="cf"></b>falso</span>
+      <span id="placar-sem" style="display:none">sem respostas registradas — use a contagem de mãos</span>
+    </div>
   </div>
 </section>
 
