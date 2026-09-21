@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elenco — quem faz o quê</title>
+<meta name="description" content="A divisão do seminário entre o grupo: quem entra quando, o que diz e o que não faz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Archivo:ital,wght@0,400;0,500;0,600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#EFEEEA;--ink:#101319;--acc:#2B4FE8;--sig:#C8341F;--mut:#6B7182;
+    --linha:#D6D5CF;--caixa:#F7F6F3;--ink2:#474D5E;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"Archivo",system-ui,sans-serif;
+    font-size:clamp(.98rem,.94rem+.25vw,1.1rem);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:78ch;margin:0 auto;padding:0 20px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--mut)}
+
+  header{padding:clamp(34px,7vw,70px) 0 clamp(20px,3vw,32px)}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.045em;
+    line-height:.95;font-size:clamp(2.2rem,7vw,3.8rem);margin:10px 0 0}
+  .lede{margin-top:16px;max-width:52ch;font-weight:500}
+
+  /* barra de tempo com as fatias de cada um */
+  .fita{display:flex;height:34px;margin:22px 0 6px;border:1.5px solid var(--ink)}
+  .fita span{display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;
+    font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:#fff;overflow:hidden;white-space:nowrap}
+  .fita .luis{background:var(--ink)}
+  .fita .outro{background:var(--acc)}
+  .fita .outro:nth-of-type(even){background:#4E6BEC}
+  .legenda-fita{display:flex;gap:16px;flex-wrap:wrap;font-size:.8rem;color:var(--mut);margin-bottom:8px}
+  .legenda-fita b{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px}
+
+  section.pessoa{border-top:2px solid var(--ink);padding:clamp(20px,3.4vw,34px) 0;break-inside:avoid}
+  .nome{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+  .nome h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.035em;
+    font-size:clamp(1.7rem,5vw,2.6rem);line-height:1}
+  .nome .quando{font-family:"JetBrains Mono",monospace;font-size:.86rem;color:var(--acc);
+    border:1.5px solid var(--acc);padding:3px 9px;white-space:nowrap}
+  .nome .dur{font-family:"JetBrains Mono",monospace;font-size:.76rem;color:var(--mut)}
+  .papel{color:var(--ink2);margin-bottom:14px;max-width:56ch}
+
+  .grade{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;align-items:baseline;margin-top:12px}
+  .grade dt{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--mut);white-space:nowrap;padding-top:3px}
+  .grade dd{font-size:.98rem;line-height:1.45}
+  .grade dd + dt{border-top:1px solid var(--linha);padding-top:11px;margin-top:3px}
+  .grade dd.sep{border-top:1px solid var(--linha);padding-top:11px;margin-top:3px}
+  .grade .fala{font-style:italic}
+  .grade .nao{color:var(--sig);font-weight:500}
+  @media (max-width:620px){
+    .grade{grid-template-columns:1fr;gap:3px 0}
+    .grade dd{margin-bottom:12px}
+    .grade dd + dt{border-top:0;padding-top:0;margin-top:0}
+    .grade dd.sep{border-top:0;padding-top:0;margin-top:0}
+  }
+
+  /* o realce dos blocos do Luis sangra 20px para cada lado; no celular isso
+     empurra a página para fora da tela, então o sangramento só existe onde há
+     margem sobrando */
+  section.pessoa.dono{background:var(--caixa)}
+  @media (min-width:calc(78ch + 80px)){
+    section.pessoa.dono{margin-inline:-20px;padding-inline:20px}
+  }
+  section.operadora{border-color:var(--sig)}
+  section.operadora .nome h2{color:var(--sig)}
+
+  .aviso{border:2px solid var(--sig);padding:16px 18px;margin:26px 0}
+  .aviso .mono{color:var(--sig);display:block;margin-bottom:7px}
+
+  footer{border-top:1px solid var(--linha);margin-top:16px;padding:30px 0 64px;color:var(--mut);font-size:.9rem}
+  footer a{color:var(--acc)}
+
+  @media print{
+    @page{size:A4;margin:13mm 12mm}
+    body{background:#fff;font-size:9.6pt}
+    .wrap{max-width:none;padding:0}
+    section.pessoa{break-inside:avoid;padding:8pt 0}
+    section.pessoa.dono{background:#fff;margin-inline:0;padding-inline:0}
+    h1{font-size:22pt}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <p class="mono">Seminário COMO VOCÊ SABE? · 19:00 → 19:19</p>
+  <h1>Quem faz o quê</h1>
+  <p class="lede">Luis conduz tudo o que é interação e os três momentos que não podem falhar.
+  Os outros entram com os blocos de explicação, na ordem. Cada troca acontece
+  <b>na virada de tela</b>, nunca no meio de uma cena.</p>
+
+  <div class="fita" aria-label="Linha do tempo por apresentador">
+    <span class="luis" style="flex:465">LUIS · abertura e coreografia</span>
+    <span class="outro" style="flex:35">CARLOS</span>
+    <span class="luis" style="flex:175">LUIS · Wason e revelação</span>
+    <span class="outro" style="flex:60">RENATA</span>
+    <span class="outro" style="flex:60">REBECA</span>
+    <span class="outro" style="flex:80">MARIANA</span>
+    <span class="outro" style="flex:150">DALILA</span>
+    <span class="luis" style="flex:120">LUIS · fecho</span>
+  </div>
+  <div class="legenda-fita">
+    <span><b style="background:var(--ink)"></b>Luis · ~11 minutos</span>
+    <span><b style="background:var(--acc)"></b>os outros cinco · ~7 minutos</span>
+  </div>
+</div></header>
+
+<main>
+
+<section class="pessoa dono"><div class="wrap">
+  <div class="nome"><h2>Luis</h2><span class="quando">00:00 → 07:45</span><span class="dur">7m45</span></div>
+  <p class="papel">Abertura, as três afirmações, a linha, a maiêutica e a troca de fichas.
+  Tudo o que é coreografia é seu, porque quem põe a sala de pé precisa ser a mesma pessoa
+  que a conduz até sentar.</p>
+  <dl class="grade">
+    <dt>Você faz</dt>
+    <dd>Abre sem dizer o tema · lê as três afirmações duas vezes cada · conta as mãos ·
+    põe todo mundo de pé na linha · faz a maiêutica com três pessoas · conduz a troca de fichas.</dd>
+    <dt>A frase que decide</dt>
+    <dd class="fala">"Se posicionem." — e então <b>dez segundos calado</b>. A vontade de preencher
+    esse silêncio é grande e estraga a cena.</dd>
+    <dt>Você não faz</dt>
+    <dd class="nao">Não corrige ninguém. Não comenta número. Não reage com a cara. Quem perguntar
+    "tá certo?" ouve "depois".</dd>
+    <dt>Passa para</dt>
+    <dd>Carlos, quando você disser "deixa eu voltar uma semana".</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa"><div class="wrap">
+  <div class="nome"><h2>Carlos</h2><span class="quando">07:45 → 08:20</span><span class="dur">35s</span></div>
+  <p class="papel">Os sentidos e a ilusão. Bloco curto e físico: é a ponte com o seminário
+  passado, o de empirismo.</p>
+  <dl class="grade">
+    <dt>Você entra</dt>
+    <dd>Quando Luis disser "deixa eu voltar uma semana".</dd>
+    <dt>Você diz</dt>
+    <dd class="fala">"Quando vocês experimentaram o chocolate e os sons, os sentidos foram uma
+    fonte de conhecimento. E foram mesmo. A pergunta de hoje é outra: eles informam — mas o
+    que eles garantem?"</dd>
+    <dt>Você faz</dt>
+    <dd>"Mão para cima quem já achou que viu alguém conhecido na rua e não era." Todo mundo
+    levanta. Então: "vocês viram. E estavam errados. Ver aconteceu — só não bastou."
+    Avance a tela: os dois quadrados encostam e viram o mesmo cinza.</dd>
+    <dt>Você não faz</dt>
+    <dd class="nao">Não explique a ilusão antes de mostrar. A prova acontece na tela.</dd>
+    <dt>Passa para</dt>
+    <dd>Luis, logo depois dos quadrados.</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa dono"><div class="wrap">
+  <div class="nome"><h2>Luis</h2><span class="quando">08:20 → 10:40</span><span class="dur">2m20</span></div>
+  <p class="papel">A evidência, o Wason, <b>a revelação</b> e a nuvem. É o centro do seminário,
+  e por isso é tudo seu.</p>
+  <dl class="grade">
+    <dt>Você faz</dt>
+    <dd>Apresenta Pashler 2008 · diz <b>"eu não disse que está provado que é falso"</b> ·
+    volta ao eixo (←) e pergunta "quem quer mudar de lugar?" · conduz o Wason ·
+    <b>a revelação</b> · abre a nuvem de palavras.</dd>
+    <dt>Decorado</dt>
+    <dd class="fala">A revelação inteira, palavra por palavra, com as pausas. São 40 segundos,
+    dos quais <b>onze são silêncio</b>. Ensaie com cronômetro.</dd>
+    <dt>Você não faz</dt>
+    <dd class="nao">Não comente quando alguém mudar de lugar. Não agradeça, não sorria demais —
+    comentar transforma a pessoa em exemplo e a próxima não se mexe.</dd>
+    <dt>Passa para</dt>
+    <dd>Renata, depois de fechar a nuvem com "vocês acabaram de produzir uma lista de fontes
+    de conhecimento".</dd>
+    <dt>O passador</dt>
+    <dd class="sep">O deck aceita as teclas que qualquer passador manda: <b>PageDown</b>,
+    <b>PageUp</b>, setas, espaço e Enter. <b>Teste o seu antes</b>: muitos passadores têm um
+    botão de tela preta que manda a letra <b>B</b> — e B, neste deck, abre as seis telas de
+    fonte no projetor. Se o seu fizer isso, me avise que eu troco a tecla.</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa"><div class="wrap">
+  <div class="nome"><h2>Renata</h2><span class="quando">10:40 → 11:40</span><span class="dur">1m</span></div>
+  <p class="papel">O que é epistemologia, e de onde vem a palavra.</p>
+  <dl class="grade">
+    <dt>Você diz</dt>
+    <dd class="fala">"Epistemologia é a área da filosofia que investiga o conhecimento. Não o
+    que a gente sabe — isso é conteúdo. Ela investiga o que faz uma coisa <b>contar</b> como
+    conhecimento: de onde vem, o que justifica, quais são os limites."</dd>
+    <dt>A curiosidade</dt>
+    <dd>A palavra parece grega, mas foi cunhada em <b>1854</b>, por um escocês, James Ferrier.
+    As raízes é que são gregas: <i>epistḗmē</i> contra <i>dóxa</i> — conhecimento contra
+    opinião. É a linha que eles atravessaram há pouco.</dd>
+    <dt>E o lógos</dt>
+    <dd>Não é só "estudo". É palavra, razão, e a <b>conta que se dá</b> de uma coisa. Foi o que
+    eles fizeram ao ler a folha do colega.</dd>
+    <dt>Você não faz</dt>
+    <dd class="nao">Não corrija o material da Aula 2, que traduz lógos como "tratado".
+    Acrescente, não contradiga.</dd>
+    <dt>Passa para</dt>
+    <dd>Rebeca, em "a tentativa clássica de definir conhecimento tem três peças".</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa"><div class="wrap">
+  <div class="nome"><h2>Rebeca</h2><span class="quando">11:40 → 12:40</span><span class="dur">1m</span></div>
+  <p class="papel">As três peças e o golpe da afirmação 3. O seu bloco tem a melhor virada do
+  seminário depois da revelação.</p>
+  <dl class="grade">
+    <dt>Você diz</dt>
+    <dd class="fala">"Três peças: você acredita, é verdade, e você tem justificação. Crença,
+    verdade, justificação." Então pergunte: <b>"onde a gente falha mais?"</b> — deixe
+    responderem — "justificação. As duas primeiras a gente resolve sozinho; a terceira é a
+    única que precisa mostrar para alguém."</dd>
+    <dt>O golpe</dt>
+    <dd class="sep">"Sócrates nunca escreveu um livro: <b>verdadeiro</b>. A maioria acertou."
+    Deixe comemorar. Então: <b>"quem consegue me dizer por quê?"</b> — e espere o silêncio,
+    que é quase garantido. Só então: <i>"vocês acertaram. Mas vocês sabiam?"</i></dd>
+    <dt>E fecha</dt>
+    <dd>Com o Mênon: a opinião verdadeira é um guia tão bom quanto o conhecimento — enquanto
+    ela fica. Ela foge, como as estátuas de Dédalo, que diziam sair andando se ninguém
+    amarrasse. Amarrada pela razão, vira conhecimento.</dd>
+    <dt>Você não faz</dt>
+    <dd class="nao">Não avance a tela "vocês acertaram" antes do silêncio. O silêncio é a cena.
+    E não fale em Gettier — é outro assunto, e é a primeira coisa a cortar.</dd>
+    <dt>Passa para</dt>
+    <dd>Mariana, em "e por que eu perguntei tanto em vez de explicar?".</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa"><div class="wrap">
+  <div class="nome"><h2>Mariana</h2><span class="quando">12:40 → 14:00</span><span class="dur">1m20</span></div>
+  <p class="papel">Sócrates, a maiêutica, e a distinção que a professora está esperando.</p>
+  <dl class="grade">
+    <dt>Você diz</dt>
+    <dd class="fala">"Sócrates viveu em Atenas no século V antes de Cristo. E ele não escreveu
+    nada — a gente só conhece ele por terceiros, principalmente por Platão. Isso é um problema
+    epistemológico sobre o próprio Sócrates. E é a resposta da afirmação três."</dd>
+    <dt>A maiêutica</dt>
+    <dd>Ele dizia que era filho de uma parteira e fazia o mesmo trabalho da mãe, com ideias:
+    não paria nenhuma, ajudava os outros a parir. E depois testava se a ideia se sustentava
+    ou era <b>ovo de vento</b> — uma ideia que parece viva e não é.</dd>
+    <dt>A distinção · nunca corte</dt>
+    <dd class="sep"><b>Epistemologia é o que se investiga</b>: o conhecimento.
+    <b>Maiêutica é um como</b>: uma forma de investigar, pela pergunta. Dá para fazer
+    epistemologia sem maiêutica nenhuma, e dá para usar maiêutica para investigar justiça ou
+    coragem. Ela foi a ferramenta. Não era o assunto.</dd>
+    <dt>Se atrasar</dt>
+    <dd class="nao">Corte a <i>Apologia</i> e o ovo de vento. Mantenha "ele não escreveu nada",
+    a parteira, e <b>a distinção inteira</b>.</dd>
+    <dt>Passa para</dt>
+    <dd>Dalila, na pergunta "por que um professor precisa pensar sobre isso?".</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa"><div class="wrap">
+  <div class="nome"><h2>Dalila</h2><span class="quando">14:00 → 16:30</span><span class="dur">2m30</span></div>
+  <p class="papel">Epistemologia e Pedagogia. É o bloco mais longo e o que mais estoura o
+  tempo — fique de olho no relógio.</p>
+  <dl class="grade">
+    <dt>Você pergunta</dt>
+    <dd class="fala">"Por que um professor precisa pensar sobre isso?" — escute
+    <b>duas</b> respostas, não hierarquize, e costure: "todas essas estão dentro da mesma coisa".</dd>
+    <dt>A ponte</dt>
+    <dd>O empirismo dá uma resposta importante: o conhecimento vem da experiência. Não é
+    resposta menor, é uma das grandes. O que a gente fez hoje foi a <b>pergunta que torna essa
+    resposta necessária</b>.</dd>
+    <dt>Sem caricatura</dt>
+    <dd class="sep">Eles estudaram na Aula 2 o quadro reprodutivista × transformador. Não trate
+    como espantalho: <i>"o quadro está certo sobre o que cada um pressupõe; o que eu acrescento
+    é que a escolha entre os dois já é uma decisão epistemológica, não de método"</i>. A
+    pergunta que vem antes: <b>que tipo de conhecimento é este, e o que conta como saber isto?</b></dd>
+    <dt>Se passar de 14:40</dt>
+    <dd class="nao">Corte a pergunta aberta e vire afirmação: "se eu perguntasse, viriam três
+    respostas: como o aluno aprende, não repetir o que é falso, e ensinar a pensar. As três
+    estão dentro da mesma coisa." Economiza 50 segundos.</dd>
+    <dt>Passa para</dt>
+    <dd>Luis, em "virem a folha".</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa dono"><div class="wrap">
+  <div class="nome"><h2>Luis</h2><span class="quando">16:30 → 18:30</span><span class="dur">2m</span></div>
+  <p class="papel">O termômetro, o antirrelativismo e o fechamento. Os dois últimos são
+  obrigatórios: são eles que impedem o seminário de terminar em "cada um tem sua verdade".</p>
+  <dl class="grade">
+    <dt>Você faz</dt>
+    <dd>Pede o verso da ficha · reabre a afirmação 2 no celular · deixa o termômetro aparecer ·
+    mostra o gráfico das três · distribui os cartões <b>falando</b> · diz a frase final.</dd>
+    <dt>Obrigatório</dt>
+    <dd class="fala">"'A Terra é redonda' e 'usamos 10% do cérebro' não estão empatadas. O
+    trabalho não é desistir de saber — é saber por quê. E se a resposta for 'nada', aquilo não
+    é conhecimento. É identidade."</dd>
+    <dt>Você não faz</dt>
+    <dd class="nao">Nunca comemore o número do termômetro. Não pare de falar para distribuir os
+    cartões. Não explique o cartão depois de entregar — a frase final é a última coisa que eles
+    ouvem.</dd>
+  </dl>
+</div></section>
+
+<section class="pessoa operadora"><div class="wrap">
+  <div class="nome"><h2>Malu</h2><span class="quando">no fim</span><span class="dur">a decidir</span></div>
+  <p class="papel">Com o passador na mão do Luis, ninguém precisa ficar no computador — então
+  o papel de operadora deixou de existir. A dinâmica do fim ainda precisa caber no relógio e
+  no fecho: hoje o seminário termina em 18:30 com a frase final e a entrega dos cartões, e não
+  há um minuto sobrando dentro do slot.</p>
+  <dl class="grade">
+    <dt>O que ainda falta decidir</dt>
+    <dd>Onde essa dinâmica entra, quanto tempo ela leva, e o que sai do roteiro para abrir
+    espaço para ela.</dd>
+    <dt>Único cuidado</dt>
+    <dd class="nao">Nada pode vir <b>depois</b> da frase final e da entrega dos cartões. Aquele
+    é o último som da sala, e é ele que as pessoas levam embora.</dd>
+  </dl>
+</div></section>
+
+<div class="wrap">
+  <div class="aviso">
+    <span class="mono">Antes de fechar a divisão, decidam isto</span>
+    <p>Somando os blocos acima, o seminário fecha em <b>18:30 exatos — sem folga nenhuma</b>, e
+    ainda assim as trocas entre seis pessoas custam alguns segundos cada. Ou vocês ensaiam as
+    passagens até ficarem instantâneas (a pessoa seguinte já em pé, na frente, antes da deixa),
+    ou cortam 60 a 90 segundos. Os cortes prontos, na ordem: o placar do Wason, a
+    <i>Apologia</i> e o ovo de vento, e a pergunta aberta da Dalila virando afirmação.</p>
+  </div>
+</div>
+
+</main>
+
+<footer><div class="wrap">
+  <p>Cada um pode imprimir só a sua parte: abra esta página, Ctrl+P, e escolha o intervalo.</p>
+  <p style="margin-top:8px"><a href="/mapa">o mapa explicado simples</a> ·
+  <a href="/cola">a cola de palco</a> ·
+  <a href="/">a apresentação</a></p>
+</div></footer>
+
+</body>
+</html>
