@@ -55,7 +55,7 @@ export default function Presenter() {
         <button
           type="button"
           className="pres__btn"
-          onClick={() => window.open('/', 'telao', 'noopener')}
+          onClick={() => window.open('/telao/', 'telao', 'noopener')}
         >
           abrir o telão
         </button>
