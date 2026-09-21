@@ -227,7 +227,8 @@
           return '<p class="q">' + x.p + '</p><p class="a">' + x.r + '</p>'
         }).join('') + '</div>'
       : ''
-    return '<details class="fontes"><summary>fontes e detalhes</summary>' +
+    // aberto por padrão: com o tempo curto, procurar a fonte custa mais que rolar
+    return '<details class="fontes" open><summary>fontes e detalhes</summary>' +
       '<h4>' + f.titulo + (f.veredito ? '<span class="veredito">' + f.veredito + '</span>' : '') + '</h4>' +
       itens + perguntas + '</details>'
   }
