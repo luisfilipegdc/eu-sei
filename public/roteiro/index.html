@@ -60,6 +60,29 @@
     font-family:ui-monospace,Menlo,monospace;font-size:.76rem;line-height:1.5;color:var(--acc)}
   .passos{margin-top:10px;font-size:.8rem;color:var(--apoio)}
   .passos b{color:var(--ok)}
+  /* fontes: fechado por padrão, porque no palco a nota vem primeiro */
+  .fontes{margin-top:14px;border-top:1px solid var(--linha);padding-top:12px}
+  .fontes summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;
+    font-family:ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--acc);padding:4px 0}
+  .fontes summary::-webkit-details-marker{display:none}
+  .fontes summary::before{content:"▸";font-size:.9rem;transition:transform .15s}
+  .fontes[open] summary::before{transform:rotate(90deg)}
+  .fontes h4{font-size:.95rem;margin:12px 0 8px;color:var(--texto)}
+  .fontes .veredito{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:.66rem;
+    letter-spacing:.12em;padding:2px 7px;border-radius:4px;margin-left:8px;
+    background:#2A1A16;color:var(--sig);font-weight:700}
+  .fonte-item{display:grid;grid-template-columns:auto 1fr;gap:8px;margin-bottom:10px;
+    font-size:.92rem;line-height:1.45;color:var(--apoio)}
+  .fonte-item .grau{font-family:ui-monospace,Menlo,monospace;font-size:.56rem;letter-spacing:.1em;
+    text-transform:uppercase;padding:3px 6px;border-radius:4px;height:fit-content;white-space:nowrap;
+    margin-top:2px;font-weight:700}
+  .grau.solido{background:#14301F;color:var(--ok)}
+  .grau.cuidado{background:#332512;color:#E8B24A}
+  .grau.consulte{background:#2A1A16;color:var(--sig)}
+  .perg{margin-top:12px;padding-top:10px;border-top:1px dashed var(--linha)}
+  .perg .q{color:#fff;font-weight:600;font-size:.92rem;margin-top:9px}
+  .perg .a{font-size:.9rem;color:var(--apoio);line-height:1.45;margin-top:2px}
   .aseguir{margin-top:14px;padding-top:11px;border-top:1px solid var(--linha);
     font-size:.84rem;color:var(--apoio);line-height:1.4}
   .aseguir .mono{display:block;margin-bottom:3px}
@@ -123,6 +146,7 @@
 </div>
 
 <script src="/roteiro/telas.js"></script>
+<script src="/roteiro/fontes.js"></script>
 <script>
 (function(){
   var telas = window.TELAS || []
@@ -183,9 +207,29 @@
         (prox.etiqueta || (prox.tela && prox.tela[0]) || '').slice(0, 70) + '</p>'
       : '<p class="aseguir"><span class="mono">fim</span>última tela — deixe no ar enquanto eles saem</p>'
 
-    carta.innerHTML = natela + '<div class="nota">' + marcar(t.nota) + '</div>' + passos + aseguir
+    carta.innerHTML = natela + '<div class="nota">' + marcar(t.nota) + '</div>' + passos +
+      fontesDe(i + 1) + aseguir
     window.scrollTo(0, 0)
     try { localStorage.setItem('eusei:roteiro', String(i)) } catch(e){}
+  }
+
+  /** Fontes, dados e perguntas prováveis — fechado até você precisar. */
+  function fontesDe(n){
+    var f = (window.FONTES || {})[n]
+    if (!f) return ''
+    var itens = (f.itens || []).map(function(x){
+      return '<div class="fonte-item"><span class="grau ' + x.grau + '">' + x.grau + '</span>' +
+             '<span>' + x.t + '</span></div>'
+    }).join('')
+    var perguntas = (f.perguntar || []).length
+      ? '<div class="perg"><span class="mono">se perguntarem</span>' +
+        f.perguntar.map(function(x){
+          return '<p class="q">' + x.p + '</p><p class="a">' + x.r + '</p>'
+        }).join('') + '</div>'
+      : ''
+    return '<details class="fontes"><summary>fontes e detalhes</summary>' +
+      '<h4>' + f.titulo + (f.veredito ? '<span class="veredito">' + f.veredito + '</span>' : '') + '</h4>' +
+      itens + perguntas + '</details>'
   }
 
   function vai(n){ i = Math.max(0, Math.min(telas.length - 1, n)); pinta() }
