@@ -145,6 +145,17 @@
     n2.value = depois.length ? vDepois : ''
     nt.value = Math.max(antes.length, depois.length)
     n1.dispatchEvent(new Event('input', { bubbles: true }))
+
+    // antes da segunda rodada não existe "agora": mostrar 0 diria que a sala
+    // inteira mudou para falso, e a frase do fecho sairia errada
+    if (!depois.length) {
+      var v2 = document.getElementById('v2')
+      var f2 = document.getElementById('f2')
+      var d = document.getElementById('tdelta')
+      if (v2) v2.textContent = '—'
+      if (f2) f2.style.width = '0%'
+      if (d) d.innerHTML = '&nbsp;'
+    }
   }
 
   ;['n1', 'n2', 'nt'].forEach(function (id) {
@@ -271,12 +282,17 @@
   /* ---------- o gráfico comparativo das três afirmações ---------- */
 
   var AFIRMACOES = [
-    { q: 'a1', frase: 'Usamos apenas 10% do nosso cérebro.' },
-    { q: 'a2', frase: 'O aluno aprende mais quando o ensino é adaptado ao estilo dele.' },
-    { q: 'a3', frase: 'Sócrates nunca escreveu um livro.' },
+    { q: 'a1', frase: 'Usamos apenas 10% do nosso cérebro.', curta: '10% do cérebro' },
+    {
+      q: 'a2',
+      frase: 'O aluno aprende mais quando o ensino é adaptado ao estilo dele.',
+      curta: 'estilos de aprendizagem',
+    },
+    { q: 'a3', frase: 'Sócrates nunca escreveu um livro.', curta: 'Sócrates' },
   ]
 
   var grade = document.getElementById('placar-grade')
+  var gradeRecap = document.getElementById('recap-grade')
 
   /**
    * Barra empilhada por afirmação: verdadeiro contra falso, contagem direta na
@@ -288,7 +304,7 @@
    * revelação e o termômetro — agora o número é fecho, não spoiler.
    */
   function placar(linhas) {
-    if (!grade) return
+    if (!grade && !gradeRecap) return
     var dados = AFIRMACOES.map(function (a) {
       var votos = linhas.filter(function (l) {
         return l.tipo === 'voto' && l.pergunta === a.q
@@ -316,28 +332,40 @@
         return d.v + '/' + d.f
       })
       .join('|')
-    if (grade.dataset.assinatura === assinatura) return
-    grade.dataset.assinatura = assinatura
 
-    grade.innerHTML = ''
-    dados.forEach(function (d, i) {
-      var n = d.v + d.f
-      var pv = n ? (d.v / n) * 100 : 0
-      var linha = document.createElement('div')
-      linha.className = 'placar-linha'
-      linha.dataset.i = String(i)
-      linha.innerHTML =
-        '<div class="placar-cab">' +
-        '<span class="frase">' + d.frase + '</span>' +
-        '<span class="n">' + n + (n === 1 ? ' resposta' : ' respostas') + '</span>' +
-        '</div>' +
-        '<div class="barra-empilhada">' +
-        '<i class="v' + (d.v ? '' : ' vazio') + '" style="width:' + pv + '%">' +
-        (d.v ? d.v : '') + '</i>' +
-        '<i class="f' + (d.f ? '' : ' vazio') + '" style="width:' + (100 - pv) + '%">' +
-        (d.f ? d.f : '') + '</i>' +
-        '</div>'
-      grade.appendChild(linha)
+    // o mesmo gráfico serve as duas telas: a do recap, onde o operador decide
+    // abrir, e a de depois do termômetro, que revela uma linha por avanço
+    ;[
+      { alvo: grade, passoAPasso: true },
+      { alvo: gradeRecap, passoAPasso: false },
+    ].forEach(function (destino) {
+      var el = destino.alvo
+      if (!el || el.dataset.assinatura === assinatura) return
+      el.dataset.assinatura = assinatura
+      el.innerHTML = ''
+      dados.forEach(function (d, i) {
+        var n = d.v + d.f
+        var pv = n ? (d.v / n) * 100 : 0
+        var linha = document.createElement('div')
+        // no recap o container inteiro é que entra, então as linhas já nascem visíveis
+        linha.className = 'placar-linha' + (destino.passoAPasso ? '' : ' in')
+        // no recap a frase já está escrita na lista acima: aqui basta o número
+        var rotulo = destino.passoAPasso
+          ? d.frase
+          : '<span class="marcador">' + (i + 1) + '</span>' + d.curta
+        linha.innerHTML =
+          '<div class="placar-cab">' +
+          '<span class="frase">' + rotulo + '</span>' +
+          '<span class="n">' + n + (n === 1 ? ' resposta' : ' respostas') + '</span>' +
+          '</div>' +
+          '<div class="barra-empilhada">' +
+          '<i class="v' + (d.v ? '' : ' vazio') + '" style="width:' + pv + '%">' +
+          (d.v ? d.v : '') + '</i>' +
+          '<i class="f' + (d.f ? '' : ' vazio') + '" style="width:' + (100 - pv) + '%">' +
+          (d.f ? d.f : '') + '</i>' +
+          '</div>'
+        el.appendChild(linha)
+      })
     })
     revelaPlacar()
   }

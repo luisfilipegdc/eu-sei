@@ -398,13 +398,16 @@
   .c{width:100%;max-width:min(1500px,88vw);margin:0 auto;display:flex;flex-direction:column;gap:2.4vmin}
   .c.wide{max-width:min(1700px,94vw)}
   .c.ctr{align-items:center;text-align:center}
-  .tag{font-family:"JetBrains Mono",monospace;font-size:clamp(11px,1.5vmin,20px);letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:700}
+  .tag{font-family:"JetBrains Mono",monospace;font-size:clamp(13px,2vmin,26px);letter-spacing:.2em;text-transform:uppercase;color:var(--acc);font-weight:700}
   .s.dark .tag{color:#8FA4FF}
-  .claim{font-family:"Archivo",sans-serif;font-weight:600;font-size:clamp(26px,5.6vmin,74px);line-height:1.13;letter-spacing:-.015em;text-wrap:balance}
-  .big{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(28px,6.4vmin,86px);line-height:1.0;letter-spacing:-.04em;text-wrap:balance}
+  .claim{font-family:"Archivo",sans-serif;font-weight:600;font-size:clamp(30px,6vmin,78px);line-height:1.13;letter-spacing:-.015em;text-wrap:balance}
+  .big{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(34px,7vmin,92px);line-height:1.0;letter-spacing:-.04em;text-wrap:balance}
   .big.lg{font-size:clamp(30px,7.4vmin,104px)}
-  .mid{font-family:"Archivo",sans-serif;font-weight:500;font-size:clamp(17px,3.1vmin,40px);line-height:1.34;text-wrap:balance}
-  .mini{font-family:"JetBrains Mono",monospace;font-size:clamp(11px,1.7vmin,21px);letter-spacing:.06em;color:var(--mut);line-height:1.6}
+  .mid{font-family:"Archivo",sans-serif;font-weight:500;font-size:clamp(20px,3.5vmin,46px);line-height:1.34;text-wrap:balance}
+  .mini{font-family:"Archivo",sans-serif;font-weight:500;font-size:clamp(16px,2.9vmin,38px);letter-spacing:0;color:#5A6070;line-height:1.4;max-width:46ch;text-wrap:balance}
+  .mini.ctr{max-width:none}
+  /* quando for etiqueta mesmo (dado, tempo), mono continua — mas maior */
+  .mini.dado{font-family:"JetBrains Mono",monospace;font-size:clamp(13px,2.1vmin,26px);letter-spacing:.06em;color:var(--mut)}
   .mini.ctr{text-align:center}
   .mega{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(46px,14vmin,200px);line-height:.9;letter-spacing:-.055em}
   .mega.sm{font-size:clamp(32px,8.2vmin,116px);line-height:.98;letter-spacing:-.045em;text-wrap:balance}
@@ -414,7 +417,7 @@
   .eusei{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(56px,16vmin,240px);line-height:.9;letter-spacing:-.035em}
   .eusei .pt{color:var(--ink)} .eusei .qm{color:var(--acc)}
   .three{list-style:none;display:flex;flex-direction:column;gap:1.6vmin}
-  .three li{font-size:clamp(15px,2.7vmin,34px);line-height:1.3;display:flex;gap:1.6vmin;align-items:baseline}
+  .three li{font-size:clamp(18px,3vmin,38px);line-height:1.3;display:flex;gap:1.6vmin;align-items:baseline}
   .three b{color:var(--sig);font-family:"Bricolage Grotesque",sans-serif;font-weight:800}
   .axis{display:flex;align-items:center;gap:3vmin;width:100%}
   .axis span{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(22px,6.2vmin,88px);letter-spacing:-.035em;white-space:nowrap}
@@ -428,7 +431,7 @@
   #ilusao.step1 .sq.a{left:calc(50% - 13vmin)}
   #ilusao.step1 .sq.b{left:50%}
   #ilusao.step1 .rev{opacity:1}
-  .ref{border-left:4px solid var(--acc);padding-left:3vmin;font-size:clamp(15px,2.9vmin,36px);line-height:1.5}
+  .ref{border-left:5px solid var(--acc);padding-left:3vmin;font-size:clamp(18px,3.1vmin,40px);line-height:1.5}
   .qlist{list-style:none;display:flex;flex-direction:column;gap:1.8vmin}
   .qlist li{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:clamp(24px,5.6vmin,78px);letter-spacing:-.03em;line-height:1.04}
   .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:3vmin}
@@ -529,6 +532,12 @@
   .placar-legenda span{display:flex;align-items:center;gap:1vmin}
   .placar-legenda b{width:1.6vmin;height:1.6vmin;display:block;border-radius:2px}
   .placar-legenda .cv{background:var(--acc)} .placar-legenda .cf{background:var(--sig)}
+  /* no recap o gráfico entra inteiro, num avanço só, e mais compacto —
+     ele divide a tela com as três afirmações escritas */
+  .recap-grafico{margin-top:3vmin;display:flex;flex-direction:column;gap:2vmin}
+  .recap-grafico .placar{gap:2vmin}
+  .recap-grafico .barra-empilhada{height:4.2vmin}
+  .recap-grafico .placar-cab{margin-bottom:.8vmin}
 
   /* hierarquia das afirmações: numeral âncora à esquerda, frase dominando,
      linha da ficha recuada. Três pesos bem diferentes, não três parágrafos. */
@@ -593,14 +602,21 @@
   </div>
 </section>
 
-<section class="s" data-note="Contagem de mãos. Conte em voz alta e anote na cola. Cara de paisagem. Se perguntarem 'tá certo?' → 'Depois.'">
-  <div class="c">
+<section class="s" id="recap" data-steps="2" data-note="Contagem de mãos. Conte em voz alta e anote na cola. Cara de paisagem. Se perguntarem 'tá certo?' → 'Depois.' · O AVANÇO ABRE O GRÁFICO DA SALA. Pense duas vezes antes: a partir daqui eles sabem onde a sala está, e a linha e a troca de fichas acontecem sabendo. Se quiser preservar a surpresa, não avance — passe direto para a próxima tela, que o gráfico volta inteiro depois do termômetro.">
+  <div class="c wide">
     <p class="tag">Mão para cima quem marcou verdadeiro</p>
     <ol class="three">
       <li><b>1</b> Usamos apenas 10% do nosso cérebro.</li>
       <li><b>2</b> O aluno aprende mais quando o ensino é adaptado ao estilo dele.</li>
       <li><b>3</b> Sócrates nunca escreveu um livro.</li>
     </ol>
+    <div class="recap-grafico step">
+      <div class="placar" id="recap-grade" role="img" aria-label="Respostas das três afirmações, verdadeiro contra falso"></div>
+      <div class="placar-legenda">
+        <span><b class="cv"></b>verdadeiro</span>
+        <span><b class="cf"></b>falso</span>
+      </div>
+    </div>
   </div>
 </section>
 
