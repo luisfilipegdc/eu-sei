@@ -45,10 +45,13 @@ const ELENCO = [
   { t: '16:30', quem: 'Luis' }, // 30 termômetro
   { t: '17:00', quem: 'Luis' }, // 30b gráfico
   { t: '17:10', quem: 'Luis', pico: true }, // 31 antirrelativismo
-  { t: '17:30', quem: 'Luis' }, // 32 como você sabe
-  { t: '17:50', quem: 'Luis', pico: true }, // 33 frase final
-  { t: '18:20', quem: 'Luis' }, // 34 eu sei?
-  { t: '18:30', quem: 'Luis' }, // 35 créditos
+  { t: '17:20', quem: 'Malu' }, // sudoku — você não descobre olhando
+  { t: '17:40', quem: 'Malu' }, // sudoku — as três peças
+  { t: '18:05', quem: 'Malu' }, // sudoku — experiência vira método
+  { t: '18:20', quem: 'Luis' }, // 32 como você sabe
+  { t: '18:40', quem: 'Luis', pico: true }, // 33 frase final
+  { t: '19:10', quem: 'Luis' }, // 34 eu sei?
+  { t: '19:20', quem: 'Luis' }, // 35 créditos
 ]
 
 /** tira tags e normaliza espaço, para o resumo do que aparece na tela */

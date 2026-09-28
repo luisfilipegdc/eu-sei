@@ -382,6 +382,40 @@ window.FONTES = {
   },
 
   34: {
+    titulo: 'Sudoku — você não descobre olhando',
+    itens: [
+      { grau: 'solido', t: 'O argumento é da Malu, e é bom: no sudoku nenhum número chega pelos sentidos. Ele chega por dedução, hipótese testada e regra validada — que é o vocabulário do seminário inteiro, aplicado a um caso limpo.' },
+      { grau: 'solido', t: 'Serve de ponte com a tela anterior: se "a Terra é redonda" e "10% do cérebro" não estão empatadas, o sudoku é o extremo do lado decidível — o caso em que a justificação fecha inteira.' },
+      { grau: 'solido', t: 'A etimologia: 数独 (sūdoku) é abreviação de uma expressão japonesa que quer dizer, mais ou menos, "os números têm que ser únicos".' },
+      { grau: 'cuidado', t: 'ATENÇÃO — "criado por um suíço no século 18" não se sustenta. Euler (suíço, século 18) criou os quadrados latinos, que são o ancestral matemático. O sudoku moderno foi criado por Howard Garns, americano, publicado em 1979 como "Number Place". Se disser "suíço no século 18" e alguém conferir, é constrangedor num seminário sobre justificação. Diga "o ancestral matemático vem de Euler, no século 18; o jogo como conhecemos é de 1979".' },
+      { grau: 'solido', t: 'Chegou ao Ocidente em massa entre 2004 e 2005, depois que o The Times passou a publicar. "2005" está bom.' },
+    ],
+    perguntar: [
+      { p: '"Então sudoku é epistemologia?"', r: 'É o caso mais fácil dela. Justamente por isso ele contrasta: no sudoku dá para provar que você sabe. Na afirmação 2, não.' },
+    ],
+  },
+
+  35: {
+    titulo: 'As três peças dentro do jogo',
+    itens: [
+      { grau: 'solido', t: 'A leitura da Malu mapeia certo: crença (você acha que o número vai ali), verdade (as regras existem independente do que você acha), justificação (o cruzamento que transforma uma na outra).' },
+      { grau: 'solido', t: 'É a mesma tríade da tela 21, agora num caso onde ela FECHA inteira. Dizer isso em voz alta é o que dá sentido ao bloco: o sudoku é o contrário do que eles viveram hoje.' },
+      { grau: 'solido', t: 'Número de tabuleiros 9×9 válidos: 6.670.903.752.021.072.936.960, ou cerca de 6,7 sextilhões. É maior que a estimativa de grãos de areia da Terra (da ordem de 10^18) — a comparação se sustenta.' },
+      { grau: 'cuidado', t: 'ATENÇÃO — esse número foi calculado em 2005, por Bertram Felgenhauer e Frazer Jarvis, não em 1975. Se for citar a data, use 2005. Sem data é mais seguro.' },
+      { grau: 'cuidado', t: 'Evite "conhecimento válido e inquestionável". Dentro do jogo, sim. Mas a tela seguinte do seminário é justamente sobre não haver garantia fora de sistemas fechados — e "inquestionável" entrega mais do que o resto do seminário sustenta.' },
+    ],
+  },
+
+  36: {
+    titulo: 'A experiência vira método — e a costura com o grupo anterior',
+    itens: [
+      { grau: 'solido', t: 'A frase da Malu: "enquanto o grupo da semana passada demonstrou como nós experimentamos o mundo, nosso papel é mostrar como transformamos essa experiência bruta em método". É um bom fecho de bloco e amarra os dois seminários.' },
+      { grau: 'solido', t: 'Depois desta tela ela PASSA PARA LUIS, que retoma em "como você sabe que aquilo que você sabe é verdade?".' },
+      { grau: 'cuidado', t: 'Nada pode vir depois da frase final e da entrega dos cartões. Por isso este bloco está ANTES do fecho, e não no fim de tudo.' },
+    ],
+  },
+
+  37: {
     titulo: 'Como você sabe que aquilo que você sabe é verdade?',
     itens: [
       { grau: 'solido', t: 'É a mesma pergunta do começo, na mesma tipografia e no mesmo lugar da tela. O deck inteiro é a distância entre as duas aparições.' },
@@ -390,7 +424,7 @@ window.FONTES = {
     ],
   },
 
-  35: {
+  38: {
     titulo: 'A frase final',
     conferido: true, // título não repete palavra da tela; alinhamento verificado à mão
     veredito: 'NO CLIQUE',
@@ -401,7 +435,7 @@ window.FONTES = {
     ],
   },
 
-  36: {
+  39: {
     titulo: 'EU SEI? — e o QR das referências',
     conferido: true, // título não repete palavra da tela; alinhamento verificado à mão
     itens: [
@@ -411,7 +445,7 @@ window.FONTES = {
     ],
   },
 
-  37: {
+  40: {
     titulo: 'Créditos',
     itens: [
       { grau: 'solido', t: 'Luis · Carlos · Malu · Renata · Rebeca · Mariana · Dalila.' },
